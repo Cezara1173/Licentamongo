@@ -1,0 +1,81 @@
+/* Reset some basic styles for the whole document */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  .App {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* Footer styles */
+  .footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    flex-shrink: 0; /* Ensure the footer does not shrink */
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  
+  .footer-section {
+    flex: 1;
+    margin: 20px;
+    padding: 20px;
+  }
+  
+  .footer-section h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-section ul li {
+    margin-bottom: 10px;
+  }
+  
+  .footer-section ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .footer-section ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    padding: 10px 0;
+    border-top: 1px solid #444;
+  }
+  
+  .footer-section .social ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-section .social ul li {
+    margin-right: 10px;
+  }
+  
+  .footer-section .social ul li a {
+    color: #fff;
+    font-size: 20px;
+  }
+  
+  .footer-section .social ul li a:hover {
+    color: #ccc;
+  }
+  

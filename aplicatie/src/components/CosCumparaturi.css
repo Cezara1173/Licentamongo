@@ -1,0 +1,47 @@
+/* CosCumparaturi.css */
+.cos-cumparaturi {
+  margin-top: 20px;
+}
+
+.cos-cumparaturi h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.cos-cumparaturi ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.cos-cumparaturi li {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.cos-cumparaturi li img {
+  width: 100px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.cos-cumparaturi li div {
+  flex: 1;
+}
+
+.cos-cumparaturi li h3 {
+  font-size: 18px;
+  margin: 0 0 5px 0;
+}
+
+.cos-cumparaturi li p {
+  margin: 5px 0;
+}
+
+.cos-cumparaturi li button {
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+}

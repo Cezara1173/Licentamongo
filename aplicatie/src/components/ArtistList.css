@@ -1,0 +1,32 @@
+/* ArtistList.css */
+.artist-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.artist-item {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  width: 300px;
+  border-radius: 5px;
+}
+
+.artist-item h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.artist-item p {
+  margin: 5px 0;
+}
+
+.artist-item ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.artist-item ul li {
+  margin-bottom: 5px;
+}
