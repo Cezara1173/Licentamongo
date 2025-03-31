@@ -5,7 +5,7 @@ import './Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useAuth(); // Access user and logout from AuthContext
-  const [isSticky, setIsSticky] = useState(false);
+  const [ setIsSticky] = useState(false);
   const navigate = useNavigate(); // Used for redirection after logging out
 
   const handleScroll = () => {
@@ -20,7 +20,7 @@ const Navbar = () => {
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+}, []);
 
   const handleLogout = () => {
     logout();

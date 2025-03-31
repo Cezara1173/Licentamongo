@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import ProductItem from './ProductItem';
+import HeroCarousel from './HeroCarousel';
 import CosCumparaturi from './CosCumparaturi';
 import { useAuth } from '../context/AuthContext';
 import './ProductList.css';
 
+
 const ProductList = () => {
   const [products, setProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [minPrice, setMinPrice] = useState('');
@@ -34,10 +36,6 @@ const ProductList = () => {
     });
     setFilteredProducts(results);
   }, [searchTerm, minPrice, maxPrice, products]);
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
 
   const handleMinPriceChange = (event) => {
     setMinPrice(event.target.value);
@@ -108,33 +106,39 @@ const ProductList = () => {
   };
 
   return (
-    <div className="product-list">
-      
-      <div>
-        <label htmlFor="minPrice">Min Price:</label>
-        <input
-          type="number"
-          id="minPrice"
-          value={minPrice}
-          onChange={handleMinPriceChange}
-        />
-        <label htmlFor="maxPrice">Max Price:</label>
-        <input
-          type="number"
-          id="maxPrice"
-          value={maxPrice}
-          onChange={handleMaxPriceChange}
+    <>
+      <HeroCarousel />
+
+      <div className="product-list">
+        <div>
+          <label htmlFor="minPrice">Min Price:</label>
+          <input
+            type="number"
+            id="minPrice"
+            value={minPrice}
+            onChange={handleMinPriceChange}
+          />
+          <label htmlFor="maxPrice">Max Price:</label>
+          <input
+            type="number"
+            id="maxPrice"
+            value={maxPrice}
+            onChange={handleMaxPriceChange}
+          />
+        </div>
+        <div className="products">
+          {filteredProducts.map(product => (
+            <ProductItem key={product._id} product={product} onAddToCart={handleAddToCart} />
+          ))}
+        </div>
+        <CosCumparaturi
+          cartItems={cartItems}
+          onRemoveFromCart={handleRemoveFromCart}
+          onCheckout={handleCheckout}
         />
       </div>
-      <div className="products">
-        {filteredProducts.map(product => (
-          <ProductItem key={product._id} product={product} onAddToCart={handleAddToCart} />
-        ))}
-      </div>
-      <CosCumparaturi cartItems={cartItems} onRemoveFromCart={handleRemoveFromCart} onCheckout={handleCheckout} />
-    </div>
+    </>
   );
-};
+}; 
 
 export default ProductList;
- 
