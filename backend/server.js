@@ -3,14 +3,22 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = 'your_jwt_secret'; // Trebuie să fie o cheie secretă puternică
 
-// Middleware
-app.use(cors());
+
+
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://192.168.88.250:3000'],
+  credentials: true
+}));
+
+// ✅ Body Parsers — these MUST be before routes
 app.use(express.json());
+app.use(cookieParser());
+
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/local', {
@@ -37,18 +45,17 @@ const productSchema = new mongoose.Schema({
   name: String,
   description: String,
   price: Number,
-  categoryId: mongoose.ObjectId,
+  categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   brand: String,
   stock: Number,
-  createdAt: Date,
-  updatedAt: Date,
   images: [String],
   attributes: {
     color: String,
     size: String,
     weight: String,
   },
-});
+}, { timestamps: true });  // Automatically adds createdAt and updatedAt
+
 
 const Product = mongoose.model('Product', productSchema);
 
@@ -147,6 +154,7 @@ app.post('/api/register', async (req, res) => {
 
 // Login
 app.post('/api/login', async (req, res) => {
+  console.log("🔥 Incoming request body:", req.body); 
   const { email, password } = req.body;
 
   try {
@@ -162,7 +170,7 @@ app.post('/api/login', async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
 
-    res.json({ token, userId: user._id });
+    res.json({ token, user });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

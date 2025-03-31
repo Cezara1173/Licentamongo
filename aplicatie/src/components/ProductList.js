@@ -12,13 +12,10 @@ const ProductList = () => {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const { token } = useAuth();
-  const userId = "60c72b2f4f1a2565b5cbd1d1"; // Exemplu de userId, în practică ar trebui obținut din context sau altă sursă.
-
   useEffect(() => {
-    // Fetch products from the API or database
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products'); // URL relativ
+        const response = await fetch('http://localhost:5000/api/products');
         const data = await response.json();
         setProducts(data);
       } catch (error) {
@@ -30,8 +27,7 @@ const ProductList = () => {
   }, []);
 
   useEffect(() => {
-    // Filter products based on search term
-    const results = products.filter(product =>{
+    const results = products.filter(product => {
       const matchesSearchTerm = product.name.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesPriceRange = product.price >= (minPrice || 0) && product.price <= (maxPrice || Infinity);
       return matchesSearchTerm && matchesPriceRange;
@@ -50,8 +46,6 @@ const ProductList = () => {
   const handleMaxPriceChange = (event) => {
     setMaxPrice(event.target.value);
   };
-    
-
 
   const handleAddToCart = (product) => {
     setCartItems(prevItems => {
@@ -67,14 +61,12 @@ const ProductList = () => {
   };
 
   const handleRemoveFromCart = (productId) => {
-    setCartItems(prevItems =>
-      prevItems.filter(item => item._id !== productId)
-    );
+    setCartItems(prevItems => prevItems.filter(item => item._id !== productId));
   };
 
-    const handleCheckout = async () => {
+  const handleCheckout = async () => {
     const orderData = {
-      userId,
+      userId: "60c72b2f4f1a2565b5cbd1d1", 
       products: cartItems.map(item => ({
         productId: item._id,
         quantity: item.quantity,
@@ -108,7 +100,7 @@ const ProductList = () => {
       const data = await response.json();
       console.log('Order created successfully:', data);
       alert('Comanda a fost finalizată cu succes!');
-      setCartItems([]); // Golește coșul de cumpărături după finalizare
+      setCartItems([]);
     } catch (error) {
       console.error('Error creating order:', error);
       alert('A apărut o problemă la finalizarea comenzii. Vă rugăm să încercați din nou.');
@@ -117,12 +109,7 @@ const ProductList = () => {
 
   return (
     <div className="product-list">
-      <input
-        type="text"
-        placeholder="Search products..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-      />
+      
       <div>
         <label htmlFor="minPrice">Min Price:</label>
         <input
@@ -150,3 +137,4 @@ const ProductList = () => {
 };
 
 export default ProductList;
+ 

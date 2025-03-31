@@ -1,51 +1,146 @@
-/* Navbar.css */
+/* Navbar Styling */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #333;
-    color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: white;
+  border-bottom: 1px solid #333;
+  height: 80px;
+}
+
+.navbar.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 9999;
+  background-color: white;
+  box-shadow: 0 4px 2px -2px gray;
+}
+
+
+.navbar h1 {
+  font-size: 36px;
+  font-weight: bold;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.navbar h1 .art {
+  color: #d2996f;  /* Light brown for 'Art' */
+}
+
+.navbar h1 .hunt {
+  color: #000;  /* Black for 'Hunt' */
+}
+
+/* Flex container for other navbar content */
+.navbar-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.search-bar {
+  margin-left: 20px; /* Spacing between the logo and search bar */
+  padding: 5px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 250px; /* Adjust the size of the search bar */
+}
+
+.navbar-auth {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Push the auth section to the right */
+}
+
+/* Navbar for logged-in users */
+.navbar-user {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-user .welcome-message {
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.navbar-user button {
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #f44336;
+  border: none;
+  color: white;
+  margin-left: 10px;
+}
+
+.navbar-user button:hover {
+  background-color:  black;
+  font-weight: bold;
+}
+
+/* Navbar for unauthenticated users */
+.navbar-login-register {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-login-register span {
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.navbar-login-register ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+.navbar-login-register ul li {
+  margin: 0 10px;
+}
+
+.navbar-login-register a {
+  text-decoration: none;
+  color: black;
+  font-size: 16px;
+  transition: font-weight 0.2s ease;  /* Smooth transition for font-weight change */
+}
+
+.navbar-login-register a:hover {
+  color: black;
+  font-weight: bold;  /* Make the font bolder on hover */
+}
+
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .navbar h1 {
-    margin: 0;
+
+  .navbar-content {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
+
   .navbar-user,
   .navbar-auth {
-    display: flex;
-    align-items: center;
-  }
-  
-  .navbar-user span,
-  .navbar-auth span {
-    margin-right: 10px;
-  }
-  
-  .navbar-user button,
-  .navbar-auth button {
-    padding: 5px 10px;
-    font-size: 14px;
-    cursor: pointer;
-    background-color: #f44336;
-    border: none;
-    color: white;
+    margin-top: 10px;
   }
 
-  .navbar ul li{
-    list-style: none;
-    display: inline-block;
-    margin: 10px;
-    color: white !important;
-  }
-  .navbar ul li a{
-    text-decoration: none;
-    color: white !important;
+  .navbar h1 {
+    font-size: 30px;
   }
 
-  .navbar ul li a:hover{
-    text-decoration: none;
-    color: white !important;
-    text-decoration: underline;
+  .search-bar {
+    width: 200px;
+    margin-top: 10px;
   }
+}

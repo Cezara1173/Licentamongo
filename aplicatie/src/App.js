@@ -15,34 +15,35 @@ const AppContent = () => {
   const { token } = useAuth();
 
   return (
-    <div className="App">
-      <Navbar />
-      <Routes>
-        {token ? (
-          <>
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/expositions" element={<ExpositionList />} />
-            <Route path="/artists" element={<ArtistList />} />
-            <Route path="/artworks" element={<ArtistsArtworks />} />
-            <Route path="/products" element={<ProductList />} />
-
-            <Route path="/productlist" element={<ProductList />} />
-            <Route path="/" element={<Navigate to="/artworks" />} />
-            <Route path="*" element={<Navigate to="/artworks" />} />
-          </>
-        ) : (
-          <>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<ProductList />} />
-            <Route path="*" element={<Navigate to="/login" />} />
-          </>
-        )}
-      </Routes>
-    </div>
+    <>
+      <Navbar /> {}
+      <div className="App">
+        <Routes>
+          {token ? (
+            <>
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/expositions" element={<ExpositionList />} />
+              <Route path="/artists" element={<ArtistList />} />
+              <Route path="/artworks" element={<ArtistsArtworks />} />
+              <Route path="/products" element={<ProductList />} />
+              <Route path="/productlist" element={<ProductList />} />
+              <Route path="/" element={<Navigate to="/artworks" />} />
+              <Route path="*" element={<Navigate to="/artworks" />} />
+            </>
+          ) : (
+            <>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/" element={<ProductList />} />
+              <Route path="*" element={<Navigate to="/login" />} />
+            </>
+          )}
+        </Routes>
+      </div>
+    </>
   );
 };
-
 const App = () => {
   return (
     <AuthProvider>
