@@ -1,0 +1,47 @@
+.comment-section {
+    margin-top: 1rem;
+  }
+  
+  .comment {
+    margin-bottom: 0.75rem;
+    background-color: #f9f9f9;
+    padding: 0.5rem;
+    border-radius: 6px;
+  }
+  
+  .comment-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  
+  .comment-form input {
+    flex: 1;
+    padding: 0.4rem;
+  }
+  
+  .comment-form button {
+    padding: 0.4rem 1rem;
+  }
+  
+  .see-more {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 0.5rem;
+  }
+  
+  .login-prompt {
+    font-size: 0.9rem;
+    color: gray;
+    margin-top: 0.5rem;
+  }
+  
+  .comment-date {
+    font-size: 0.8rem;
+    color: #777;
+    margin-left: 0.25rem;
+  }
+  

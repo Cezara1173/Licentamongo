@@ -1,4 +1,3 @@
-// CosCumparaturi.js
 import React from 'react';
 import './CosCumparaturi.css';
 
@@ -16,8 +15,8 @@ const CosCumparaturi = ({ cartItems, onRemoveFromCart, onCheckout }) => {
                 <img src={item.images[0]} alt={item.name} />
                 <div>
                   <h3>{item.name}</h3>
-                  <p>Price: ${item.price.toFixed(2)}</p>
-                  <p>Quantity: {item.quantity}</p>
+                  <p>Preț: ${item.price.toFixed(2)}</p>
+                  <p>Cantitate: {item.quantity}</p>
                   <button onClick={() => onRemoveFromCart(item._id)}>Remove</button>
                 </div>
               </li>

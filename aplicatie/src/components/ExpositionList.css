@@ -1,0 +1,311 @@
+/* === HERO FULLSCREEN CAROUSEL === */
+.hero-slider {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-slide {
+  display: none;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 1s ease-in-out;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px;
+  box-sizing: border-box;
+  background-color: #fff;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-slide.active {
+  display: flex;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.hero-left {
+  flex: 1;
+  padding-right: 40px;
+}
+
+.hero-left h1 {
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+
+.hero-left p {
+  font-size: 20px;
+  color: #555;
+}
+
+.hero-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-right img {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.hero-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 28px;
+  color: #000;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.hero-arrow.left {
+  left: 20px;
+}
+
+.hero-arrow.right {
+  right: 20px;
+}
+
+.hero-dots {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background-color: #000;
+}
+
+/* === CAROUSEL UNDER HERO === */
+.expo-container {
+  padding: 60px;
+  position: relative;
+  margin-top: 40px;
+}
+
+.date-filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  font-size: 18px;
+}
+
+.expo-carousel-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.expo-scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.expo-scroll-arrow:hover {
+  background-color: #f0f0f0;
+}
+
+.expo-scroll-arrow.left {
+  left: 10px;
+}
+
+.expo-scroll-arrow.right {
+  right: 10px;
+}
+
+.expo-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 24px;
+  padding: 10px;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+}
+
+.expo-card {
+  flex: 0 0 auto;
+  width: 350px;
+  height: 220px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+  overflow: hidden;
+  scroll-snap-align: start;
+  transition: transform 0.3s;
+  position: relative;
+}
+
+.expo-card:hover {
+  transform: scale(1.02);
+}
+
+.expo-image {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  background-color: #eee;
+}
+
+.expo-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 8px 12px 0;
+}
+
+.expo-date {
+  font-size: 14px;
+  color: #666;
+  margin: 0 12px 12px;
+}
+
+.expo-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* === LIST VIEW BELOW CAROUSEL === */
+.expo-list {
+  margin-top: 60px;
+  padding: 0 60px 80px;
+}
+
+.expo-list-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eaeaea;
+  padding: 20px 0;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.expo-list-item:hover {
+  background-color: #fafafa;
+}
+
+.expo-list-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-right: 24px;
+}
+
+.expo-list-content {
+  flex: 1;
+}
+
+.expo-list-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.expo-list-date {
+  font-size: 14px;
+  color: #666;
+}
+
+.expo-list-arrow {
+  font-size: 22px;
+  color: #999;
+  margin-left: 12px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .hero-slide {
+    flex-direction: column;
+    padding: 30px;
+    text-align: center;
+  }
+
+  .hero-left {
+    padding: 0;
+  }
+
+  .hero-left h1 {
+    font-size: 32px;
+  }
+
+  .hero-left p {
+    font-size: 16px;
+  }
+
+  .hero-right img {
+    max-width: 90%;
+    height: auto;
+  }
+
+  .expo-container {
+    padding: 30px;
+  }
+
+  .expo-card {
+    width: 280px;
+    height: 200px;
+  }
+
+  .expo-list {
+    padding: 0 20px 60px;
+  }
+
+  .expo-list-item {
+    flex-direction: row;
+  }
+
+  .expo-list-img {
+    width: 60px;
+    height: 60px;
+    margin-right: 16px;
+  }
+}

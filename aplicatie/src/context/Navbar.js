@@ -1,60 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from './AuthContext';  // Correct import path for your context
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
+import { useSearch } from './SearchContext';
+import { useNavigate, Link } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = () => {
-  const { user, logout } = useAuth(); // Access user and logout from AuthContext
-  const [ setIsSticky] = useState(false);
-  const navigate = useNavigate(); // Used for redirection after logging out
-
-  const handleScroll = () => {
-    const scrollTop = window.scrollY;
-    if (scrollTop > 100) {
-      setIsSticky(true);
-    } else {
-      setIsSticky(false);
-    }
-  };
+const Navbar = ({ onLoginClick, onRegisterClick }) => {
+  const { user, logout } = useAuth();
+  const { searchTerm, setSearchTerm } = useSearch();
+  const [isSticky, setIsSticky] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const handleScroll = () => {
+      setIsSticky(window.scrollY > 100);
+    };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-}, []);
+  }, []);
 
   const handleLogout = () => {
     logout();
-    navigate('/login'); // Redirect to login page after logging out
+    navigate('/');
   };
 
   return (
-    <nav className="navbar sticky">
+    <nav className={`navbar ${isSticky ? 'sticky' : ''}`}>
+      <div className="navbar-left">
+        <h1 className="logo">
+          <span className="art">Art</span>
+          <span className="hunt">Hunt</span>
+        </h1>
+      </div>
 
-      <h1>
-        <span className="art">Art</span>
-        <span className="hunt">Hunt</span>
-      </h1>
-      <div className="navbar-content">
-        <input className="search-bar" type="text" placeholder="Search products..." />
-        <div className="navbar-auth">
-          {user ? (
-            // Navbar for logged-in users
-            <div className="navbar-user">
-              <li><Link to="/products">Products</Link></li>
-              <span className="welcome-message">Welcome, {user.username || user.email}</span>
-              <button onClick={handleLogout}>Logout</button>
-            </div>
-          ) : (
-            // Navbar for non-logged-in users
-            <div className="navbar-login-register">
-              <span>Please login or register</span>
-              <ul>
-                <li><Link to="/login">Login</Link></li>
-                <li><Link to="/register">Register</Link></li>
-              </ul>
-            </div>
+      <div className="navbar-center">
+        <input
+          className="search-bar"
+          type="text"
+          placeholder="Caută..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      <div className="navbar-right">
+        <ul className="navbar-links">
+          <li><Link to="/productlist">Products</Link></li>
+          <li><Link to="/artists">Artists</Link></li>
+          <li><Link to="/expositions">Expositions</Link></li>
+          {user && (
+            <li><Link to="/cart">Cart</Link></li>
           )}
-        </div>
+        </ul>
+
+        {user ? (
+          <div className="navbar-user">
+            <span className="welcome-message">Welcome, {user.username || user.email}</span>
+            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+          </div>
+        ) : (
+          <div className="navbar-login-register">
+            <span className="login-message">Please login or register</span>
+            <ul className="auth-buttons">
+              <li>
+                <button className="styled-login-btn" onClick={onLoginClick}>Log In</button>
+              </li>
+              <li>
+                <button className="styled-register-link" onClick={onRegisterClick}>Sign Up</button>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </nav>
   );

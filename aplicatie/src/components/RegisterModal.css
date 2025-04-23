@@ -1,0 +1,117 @@
+.register-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+  
+  .register-box {
+    background: white;
+    max-width: 420px;
+    width: 100%;
+    padding: 40px 30px;
+    border-radius: 12px;
+    position: relative;
+    text-align: center;
+  }
+  
+  .register-logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .register-logo .art {
+    color: #673377;
+  }
+  
+  .register-logo .hunt {
+    color: black;
+  }
+  
+  .register-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  
+  .register-input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+  }
+  
+  .register-button {
+    width: 100%;
+    padding: 14px;
+    background: black;
+    color: white;
+    font-size: 16px;
+    border-radius: 30px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .register-button:hover {
+    background-color: #333;
+  }
+  
+  .register-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .register-error {
+    color: #b00020;
+    background: #ffe8e8;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  
+  .link-button {
+    background: none;
+    border: none;
+    color: #673377;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0;
+    margin-left: 4px;
+  }
+  .field-error {
+    color: #888;
+    font-size: 13px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+  
+  .input-error {
+    border: 1px solid #ff8080;
+  }
+  
+  .register-success {
+    color: green;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  

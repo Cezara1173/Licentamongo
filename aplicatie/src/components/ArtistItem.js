@@ -1,47 +1,83 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { FaRegHeart, FaHeart } from 'react-icons/fa';
+import './ArtistItem.css';
 
-const ArtistItem = ({ artist }) => {
-  const [artworks, setArtworks] = useState([]);
+const PRIMARY_PURPLE = "#9c27b0";
+
+const ArtistItem = ({ artist, onTriggerLoginModal }) => {
+  const [liked, setLiked] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
+  const userId = user?._id;
+  const storageKey = userId ? `likedArtists_${userId}` : null;
 
   useEffect(() => {
-    // Fetch artworks details from the API
-    const fetchArtworks = async () => {
-      try {
-        const responses = await Promise.all(
-          artist.artworkIds.map(id =>
-            fetch(`http://localhost:5000/api/products/${id}`).then(response => response.json())
-          )
-        );
-        setArtworks(responses);
-      } catch (error) {
-        console.error('Error fetching artworks:', error);
-      }
-    };
+    if (!userId) return;
+    const likedArtists = JSON.parse(localStorage.getItem(`likedArtists_${userId}`)) || [];
+    setLiked(token && likedArtists.includes(artist._id));
+  }, [artist._id, token, userId]);
+  const handleLikeClick = async (e) => {
+    e.stopPropagation();
 
-    fetchArtworks();
-  }, [artist.artworkIds]);
+    if (!token || !userId) {
+      onTriggerLoginModal?.();
+      return;
+    }
+
+    const endpoint = liked ? '/api/unlike-artist' : '/api/like-artist';
+
+    try {
+      const response = await fetch(`http://localhost:5000${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token,
+        },
+        body: JSON.stringify({ artistId: artist._id }),
+      });
+
+      if (response.ok) {
+        const likedArtists = JSON.parse(localStorage.getItem(storageKey)) || [];
+        const updated = liked
+          ? likedArtists.filter(id => id !== artist._id)
+          : [...likedArtists, artist._id];
+
+        localStorage.setItem(storageKey, JSON.stringify(updated));
+        setLiked(!liked);
+      }
+    } catch (error) {
+      console.error('Failed to like/unlike artist:', error);
+    }
+  };
 
   return (
-    <div className="artist-item">
-      <h2>{artist.name}</h2>
-      <p><strong>Bio:</strong> {artist.bio}</p>
-      <p><strong>Birth Year:</strong> {artist.birthYear}</p>
-      <p><strong>Nationality:</strong> {artist.nationality}</p>
-      <h3>Artworks</h3>
-      <ul className="artwork-list">
-        {artworks.map((artwork) => (
-          <li key={artwork._id.$oid} className="artwork-item">
-            <img src={artwork.images[0]} alt={artwork.name} className="artwork-image" />
-            <p>{artwork.name}</p>
-            <p>{artwork.description}</p>
-            <p>Price: ${artwork.price}</p>
-            <p>Stock: {artwork.stock}</p>
-            <p>Color: {artwork.attributes.color}</p>
-            <p>Size: {artwork.attributes.size}</p>
-            <p>Weight: {artwork.attributes.weight}</p>
-          </li>
-        ))}
-      </ul>
+    <div className="artist-card">
+      <div className="artist-image-container">
+        <img
+          src={artist.image || '/images/default-artist.jpg'}
+          alt={artist.name}
+          className="artist-image"
+        />
+      </div>
+
+      <div className="artist-actions">
+        <button
+          className="heart-button"
+          onClick={handleLikeClick}
+          aria-label={liked ? "Unlike" : "Like"}
+          type="button"
+        >
+          {liked ? (
+            <FaHeart className="heart-icon filled" style={{ color: PRIMARY_PURPLE }} />
+          ) : (
+            <FaRegHeart className="heart-icon outlined" style={{ color: PRIMARY_PURPLE }} />
+          )}
+        </button>
+      </div>
+
+      <h3 className="artist-name">{artist.name}</h3>
+      <p className="artist-bio">{artist.bio}</p>
     </div>
   );
 };

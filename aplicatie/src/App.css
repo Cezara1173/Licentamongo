@@ -1,43 +1,92 @@
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  scroll-behavior: auto;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+ul, li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ========== App Wrapper ========== */
 .App {
-   text-align: center; 
-   padding-top: 80px;
+  padding-top: 0; 
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: unset;   
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* ========== Hero Banner ========== */
+.hero-banner-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.hero-banner-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.hero-banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  padding: 60px 40px;
+}
+
+.hero-banner-text {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1440px;
+  width: 100%;
+  justify-content: space-between;
+  gap: 60px;
   color: white;
+  z-index: 3;
 }
 
-.App-link {
-  color: #61dafb;
+.hero-heading {
+  flex: 1;
+  font-size: 52px;
+  font-weight: 300;
+  margin: 0;
+  line-height: 1.2;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-ul li{
-  list-style: none;
+.hero-subtext {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.7;
+  text-align: right;
+  max-width: 600px;
+  margin: 0;
 }

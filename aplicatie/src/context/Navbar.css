@@ -1,146 +1,196 @@
-/* Navbar Styling */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: white;
-  border-bottom: 1px solid #333;
-  height: 80px;
-}
-
-.navbar.sticky {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  z-index: 9999;
-  background-color: white;
-  box-shadow: 0 4px 2px -2px gray;
-}
-
-
-.navbar h1 {
-  font-size: 36px;
-  font-weight: bold;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.navbar h1 .art {
-  color: #d2996f;  /* Light brown for 'Art' */
-}
-
-.navbar h1 .hunt {
-  color: #000;  /* Black for 'Hunt' */
-}
-
-/* Flex container for other navbar content */
-.navbar-content {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: flex-start;
-}
-
-.search-bar {
-  margin-left: 20px; /* Spacing between the logo and search bar */
-  padding: 5px 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 250px; /* Adjust the size of the search bar */
-}
-
-.navbar-auth {
-  display: flex;
-  align-items: center;
-  margin-left: auto; /* Push the auth section to the right */
-}
-
-/* Navbar for logged-in users */
-.navbar-user {
-  display: flex;
-  align-items: center;
-}
-
-.navbar-user .welcome-message {
-  margin-right: 10px;
-  font-size: 16px;
-}
-
-.navbar-user button {
-  padding: 5px 10px;
-  font-size: 14px;
-  cursor: pointer;
-  background-color: #f44336;
-  border: none;
-  color: white;
-  margin-left: 10px;
-}
-
-.navbar-user button:hover {
-  background-color:  black;
-  font-weight: bold;
-}
-
-/* Navbar for unauthenticated users */
-.navbar-login-register {
-  display: flex;
-  align-items: center;
-}
-
-.navbar-login-register span {
-  font-size: 16px;
-  margin-right: 10px;
-}
-
-.navbar-login-register ul {
-  display: flex;
-  list-style: none;
+/* ========== BASE RESET ========== */
+* {
+  box-sizing: border-box;
+  margin: 0;
   padding: 0;
 }
 
-.navbar-login-register ul li {
-  margin: 0 10px;
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
 }
 
-.navbar-login-register a {
+/* ========== NAVBAR ========== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  width: 100%;
+}
+
+.navbar.sticky {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.art {
+  color: #673377;
+}
+
+.hunt {
+  color: #000;
+}
+
+.navbar-left,
+.navbar-center,
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-center {
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.navbar-right {
+  gap: 20px;
+}
+
+.search-bar {
+  padding: 6px 14px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 260px;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-links a {
   text-decoration: none;
   color: black;
   font-size: 16px;
-  transition: font-weight 0.2s ease;  /* Smooth transition for font-weight change */
+  transition: font-weight 0.2s ease;
 }
 
-.navbar-login-register a:hover {
+.navbar-links a:hover {
+  font-weight: bold;
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-user .welcome-message {
+  font-size: 15px;
+}
+
+.navbar-user button {
+  background-color: #f44336;
+  border: none;
+  padding: 8px 12px;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.navbar-user button:hover {
+  background-color: black;
+  font-weight: bold;
+}
+
+.navbar-login-register {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* 🔄 NOU: stil pentru butoanele Login & Register */
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.auth-buttons li .styled-login-btn {
+  background-color: white;
   color: black;
-  font-weight: bold;  /* Make the font bolder on hover */
+  border: 1px solid black;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
+.auth-buttons li .styled-login-btn:hover {
+  background-color: #f1f1f1;
+}
 
-/* Responsive Design for Smaller Screens */
+.auth-buttons li .styled-register-link {
+  background-color: black;
+  color: white;
+  text-decoration: none;
+  padding: 8px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+  display: inline-block;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.auth-buttons li .styled-register-link:hover {
+  background-color: #333;
+}
+
+/* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .navbar-content {
+  .navbar-center {
+    width: 100%;
+    justify-content: center;
+    margin: 10px 0;
+  }
+
+  .navbar-right {
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
+    width: 100%;
   }
 
-  .navbar-user,
-  .navbar-auth {
-    margin-top: 10px;
-  }
-
-  .navbar h1 {
-    font-size: 30px;
+  .navbar-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
   }
 
   .search-bar {
-    width: 200px;
-    margin-top: 10px;
+    width: 90%;
   }
 }

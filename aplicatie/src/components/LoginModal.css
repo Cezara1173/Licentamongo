@@ -1,0 +1,84 @@
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+  
+  .login-box {
+    background: white;
+    max-width: 420px;
+    width: 100%;
+    padding: 40px 30px;
+    border-radius: 10px;
+    position: relative;
+    text-align: center;
+  }
+  
+  .login-logo {
+    max-height: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .login-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  
+  .login-input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+  }
+  
+  .login-button {
+    width: 100%;
+    padding: 14px;
+    background: black;
+    color: white;
+    font-size: 16px;
+    border-radius: 30px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .login-button:hover {
+    background: #333;
+  }
+  
+  .login-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .login-logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .login-logo .art {
+    color: #6a2576; /* movul tău */
+  }
+  
+  .login-logo .hunt {
+    color: black;
+  }
+    

@@ -1,56 +1,92 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import ProductList from './components/ProductList';
-import Login from './components/Login';
-import Register from './components/Register';
+import React, { useState } from 'react';
+import {
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
+
+import { AuthProvider } from './context/AuthContext';
+import { SearchProvider } from './context/SearchContext';
+import { CartProvider } from './context/CartContext';
+import { LoginModalProvider, useLoginModal } from './context/LoginModalContext';
+
 import Navbar from './context/Navbar';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import './App.css';
+import Footer from './components/Footer';
+import ProductList from './components/ProductList';
 import ArtistList from './components/ArtistList';
 import ExpositionList from './components/ExpositionList';
-import ArtistsArtworks from './components/ArtistsArtworks';
-import Footer from './components/Footer';
+import ExpositionScrollDetail from './components/ExpositionScrollDetail'; // ✅ Folosim doar varianta elegantă
+import CartPage from './components/CartPage';
+import LoginModal from './components/LoginModal';
+import RegisterModal from './components/RegisterModal';
+import ScrollToTop from './utils/ScrollToTop';
+import HeroCarousel from './components/HeroCarousel';
+
+import './App.css';
 
 const AppContent = () => {
-  const { token } = useAuth();
+  const { openLoginModal } = useLoginModal();
 
   return (
     <>
-      <Navbar /> {}
-      <div className="App">
-        <Routes>
-          {token ? (
-            <>
-              <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/expositions" element={<ExpositionList />} />
-              <Route path="/artists" element={<ArtistList />} />
-              <Route path="/artworks" element={<ArtistsArtworks />} />
-              <Route path="/products" element={<ProductList />} />
-              <Route path="/productlist" element={<ProductList />} />
-              <Route path="/" element={<Navigate to="/artworks" />} />
-              <Route path="*" element={<Navigate to="/artworks" />} />
-            </>
-          ) : (
-            <>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/" element={<ProductList />} />
-              <Route path="*" element={<Navigate to="/login" />} />
-            </>
-          )}
-        </Routes>
-      </div>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<ProductList />} />
+        <Route path="/productlist" element={<ProductList />} />
+        <Route path="/expositions" element={<ExpositionList />} />
+        <Route path="/expositions/:id" element={<ExpositionScrollDetail />} /> {/* ✅ Singura variantă activă */}
+        <Route path="/artists" element={<ArtistList onTriggerLoginModal={openLoginModal} />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/hero" element={<HeroCarousel />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
     </>
   );
 };
+
+const AppWrapper = () => {
+  const [showRegister, setShowRegister] = useState(false);
+  const { openLoginModal } = useLoginModal();
+
+  const openRegister = () => setShowRegister(true);
+  const closeRegister = () => setShowRegister(false);
+
+  return (
+    <>
+      <Navbar onLoginClick={openLoginModal} onRegisterClick={openRegister} />
+
+      <div className="App">
+        <AppContent />
+      </div>
+
+      <Footer />
+      <LoginModal />
+
+      {showRegister && (
+        <RegisterModal
+          key={`register-${Date.now()}`}
+          onClose={closeRegister}
+          onRegisterSuccess={closeRegister}
+          onSwitchToLogin={() => {
+            closeRegister();
+            openLoginModal();
+          }}
+        />
+      )}
+    </>
+  );
+};
+
 const App = () => {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-        <Footer />
-      </Router>
+      <SearchProvider>
+        <LoginModalProvider>
+          <CartProvider>
+            <AppWrapper />
+          </CartProvider>
+        </LoginModalProvider>
+      </SearchProvider>
     </AuthProvider>
   );
 };
