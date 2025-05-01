@@ -29,11 +29,15 @@ const ExpositionDetail = () => {
 
         <div className="expo-section">
           <div className="expo-section-title">Artiști</div>
-          <ul className="expo-artist-list">
-            {exposition.artists.map((artist) => (
-              <li key={artist._id}>{artist.name}</li>
-            ))}
-          </ul>
+          {exposition.artists && exposition.artists.length > 0 ? (
+            <ul className="expo-artist-grid">
+              {exposition.artists.map((artist) => (
+                <li key={artist._id}>{artist.name}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="expo-section-content">Nu sunt artiști asociați cu această expoziție.</p>
+          )}
         </div>
       </div>
     </div>

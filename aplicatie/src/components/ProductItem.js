@@ -25,7 +25,6 @@ const ProductItem = ({ product, onTriggerLoginModal }) => {
     }
   };
 
-  // 👇 Deschide login modal DOAR pentru comentariu (iconul)
   const handleIconClick = () => {
     if (!token) {
       onTriggerLoginModal?.();
@@ -34,7 +33,6 @@ const ProductItem = ({ product, onTriggerLoginModal }) => {
     }
   };
 
-  // 👇 Vezi comentarii – funcționează și nelogat
   const handleViewClick = () => {
     setShowComments(prev => !prev);
   };
@@ -56,6 +54,7 @@ const ProductItem = ({ product, onTriggerLoginModal }) => {
       <p className="product-description">{product.description}</p>
       <p className="product-price">${product.price.toFixed(2)}</p>
       <p className="product-stock">Stoc: {product.stock}</p>
+      <p className="product-artist">Artist: {product.artist?.name || 'Necunoscut'}</p>
 
       <div className="product-button-wrapper">
         <button onClick={handleAddToCart}>Adaugă în coș</button>

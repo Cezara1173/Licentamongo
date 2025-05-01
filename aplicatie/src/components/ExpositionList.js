@@ -4,6 +4,7 @@ import axios from 'axios';
 import { format, isValid } from 'date-fns';
 import ro from 'date-fns/locale/ro';
 import { useSearch } from '../context/SearchContext';
+import deduplicateByTitleAndId from '../utils/deduplicateByTitleAndId';
 import './ExpositionList.css';
 
 const formatDateRange = (start, end) => {
@@ -40,12 +41,18 @@ const ExpositionList = () => {
     const fetchExpositions = async () => {
       try {
         const res = await axios.get('http://localhost:5000/api/expositions');
-        const valid = res.data.filter(e => isValid(new Date(e.startDate)) && isValid(new Date(e.endDate)));
-        setExpositions(valid);
-        setFiltered(valid);
+        const valid = res.data.filter(e =>
+          isValid(new Date(e.startDate)) && isValid(new Date(e.endDate))
+        );
+        const deduplicated = deduplicateByTitleAndId(valid);
+        setExpositions(deduplicated);
+        setFiltered(deduplicated);
 
-        const currentMonthExpos = getCurrentMonthExpositions(valid);
-        setFeaturedExpos(currentMonthExpos.length > 0 ? currentMonthExpos : valid.slice(0, 1));
+        const currentMonthExpos = getCurrentMonthExpositions(deduplicated);
+        const featured = currentMonthExpos.length > 0
+          ? currentMonthExpos
+          : deduplicated.slice(0, 1);
+        setFeaturedExpos(deduplicateByTitleAndId(featured));
       } catch (err) {
         console.error('Error fetching expositions:', err);
       }
@@ -72,7 +79,7 @@ const ExpositionList = () => {
       );
     }
 
-    setFiltered(result);
+    setFiltered(deduplicateByTitleAndId(result));
   }, [startDate, endDate, searchTerm, expositions]);
 
   useEffect(() => {

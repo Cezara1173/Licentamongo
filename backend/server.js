@@ -39,7 +39,9 @@ db.once('open', () => console.log('Connected to MongoDB'));
 
 // Middleware to verify token
 const verifyToken = (req, res, next) => {
-  const token = req.headers['x-access-token'];
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
   if (!token) return res.status(401).json({ message: 'No token provided' });
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
@@ -50,7 +52,7 @@ const verifyToken = (req, res, next) => {
   });
 };
 
-// Register
+
 // Register
 app.post('/api/register', async (req, res) => {
   const { username, email, password } = req.body;
@@ -113,6 +115,7 @@ app.post("/api/login", async (req, res) => {
         _id: user._id,
         email: user.email,
         username: user.username,
+        likedArtists: user.likedArtists || [], // 🔥 trimitem likedArtists
       },
     });
   } catch (err) {
@@ -121,24 +124,27 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+
 // Protected route example
 app.get('/api/protected', verifyToken, (req, res) => {
   res.json({ message: 'This is a protected route', userId: req.userId });
 });
 
 // Routes for Products
+
 app.get('/api/products', async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate('artist', 'name');
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
+
 app.get('/api/products/:id', async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate('artist', 'name');
     if (!product) return res.status(404).json({ message: 'Product not found' });
 
     res.json(product);
@@ -147,15 +153,20 @@ app.get('/api/products/:id', async (req, res) => {
   }
 });
 
+
 app.get('/api/products/search', async (req, res) => {
   const searchTerm = req.query.q;
   try {
-    const products = await Product.find({ name: { $regex: searchTerm, $options: 'i' } });
+    const products = await Product.find({
+      name: { $regex: searchTerm, $options: 'i' }
+    }).populate('artist', 'name');
+
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // Routes for Orders
 app.post('/api/orders', verifyToken, async (req, res) => {
@@ -371,8 +382,11 @@ app.post('/api/like-artist', verifyToken, async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    if (!user.likedArtists.includes(artistId)) {
-      user.likedArtists.push(artistId);
+    // Asigurăm că artistId este string pentru comparație corectă
+    const artistIdString = artistId.toString();
+
+    if (!user.likedArtists.some(id => id.toString() === artistIdString)) {
+      user.likedArtists.push(artistIdString);
       await user.save();
     }
 
@@ -391,8 +405,10 @@ app.post('/api/unlike-artist', verifyToken, async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
+    const artistIdString = artistId.toString();
+
     user.likedArtists = user.likedArtists.filter(
-      id => id.toString() !== artistId
+      id => id.toString() !== artistIdString
     );
 
     await user.save();
@@ -404,28 +420,36 @@ app.post('/api/unlike-artist', verifyToken, async (req, res) => {
 });
 
 // Get recommended expositions
+// Get recommended expositions based on liked artists (minimum 3)
 app.get('/api/recomandate', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     const likedArtistIds = user.likedArtists.map(id => id.toString());
+    console.log('User liked artists:', likedArtistIds);
 
-    const allExpositions = await Exposition.find().populate('artists');
+    // Populăm doar _id pentru fiecare artist
+    const allExpositions = await Exposition.find().populate('artists', '_id');
 
     const recomandate = allExpositions.filter(expo => {
       const matchCount = expo.artists.filter(artist =>
         likedArtistIds.includes(artist._id.toString())
       ).length;
 
-      return matchCount >= 2;
+      return matchCount >= 3; //  minimul de artiști
     });
-
+  
+    console.log('Recommended expositions:', recomandate.map(e => e.title));
     res.json(recomandate);
   } catch (err) {
+    console.error('Error in /api/recomandate:', err);
     res.status(500).json({ message: err.message });
   }
 });
+
+
+
 
 // Create a new comment
 app.post('/api/comments', verifyToken, async (req, res) => {

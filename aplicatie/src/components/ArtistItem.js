@@ -4,8 +4,9 @@ import './ArtistItem.css';
 
 const PRIMARY_PURPLE = "#9c27b0";
 
-const ArtistItem = ({ artist, onTriggerLoginModal }) => {
+const ArtistItem = ({ artist, onTriggerLoginModal, scrollId }) => {
   const [liked, setLiked] = useState(false);
+  const [animating, setAnimating] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
@@ -14,12 +15,12 @@ const ArtistItem = ({ artist, onTriggerLoginModal }) => {
 
   useEffect(() => {
     if (!userId) return;
-    const likedArtists = JSON.parse(localStorage.getItem(`likedArtists_${userId}`)) || [];
-    setLiked(token && likedArtists.includes(artist._id));
-  }, [artist._id, token, userId]);
+    const likedArtists = JSON.parse(localStorage.getItem(storageKey)) || [];
+    setLiked(likedArtists.includes(artist._id));
+  }, [artist._id, userId, token, storageKey]);
+
   const handleLikeClick = async (e) => {
     e.stopPropagation();
-
     if (!token || !userId) {
       onTriggerLoginModal?.();
       return;
@@ -32,7 +33,7 @@ const ArtistItem = ({ artist, onTriggerLoginModal }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-access-token': token,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ artistId: artist._id }),
       });
@@ -45,6 +46,10 @@ const ArtistItem = ({ artist, onTriggerLoginModal }) => {
 
         localStorage.setItem(storageKey, JSON.stringify(updated));
         setLiked(!liked);
+        if (!liked) {
+          setAnimating(true);
+          setTimeout(() => setAnimating(false), 500);
+        }
       }
     } catch (error) {
       console.error('Failed to like/unlike artist:', error);
@@ -52,7 +57,7 @@ const ArtistItem = ({ artist, onTriggerLoginModal }) => {
   };
 
   return (
-    <div className="artist-card">
+    <div className="artist-card" id={scrollId}>
       <div className="artist-image-container">
         <img
           src={artist.image || '/images/default-artist.jpg'}
@@ -63,7 +68,7 @@ const ArtistItem = ({ artist, onTriggerLoginModal }) => {
 
       <div className="artist-actions">
         <button
-          className="heart-button"
+          className={`heart-button ${animating ? 'pulse' : ''}`}
           onClick={handleLikeClick}
           aria-label={liked ? "Unlike" : "Like"}
           type="button"

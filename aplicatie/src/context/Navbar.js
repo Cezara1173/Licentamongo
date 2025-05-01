@@ -49,6 +49,9 @@ const Navbar = ({ onLoginClick, onRegisterClick }) => {
           <li><Link to="/artists">Artists</Link></li>
           <li><Link to="/expositions">Expositions</Link></li>
           {user && (
+        <li><Link to="/favorites">Favorites</Link></li> 
+         )}
+          {user && (
             <li><Link to="/cart">Cart</Link></li>
           )}
         </ul>

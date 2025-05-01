@@ -25,18 +25,31 @@ const ExpositionScrollDetail = () => {
       <div className="expo-scroll-content">
         <h1 className="expo-scroll-title">{exposition.title}</h1>
 
-        <section className="expo-scroll-section">
-          <h2 className="expo-scroll-subtitle">Despre</h2>
-          <p className="expo-scroll-text">{exposition.description}</p>
-        </section>
+        {/* === Despre în format grid: etichetă + conținut === */}
+        <div className="expo-scroll-grid">
+          <div className="expo-scroll-label">Despre</div>
+          <div className="expo-scroll-description">
+            <p>{exposition.description}</p>
+            {exposition.location && (
+              <p className="expo-scroll-location">
+                <strong>Locație</strong> {exposition.location}
+              </p>
+            )}
+          </div>
+        </div>
 
+        {/* === Artiști === */}
         <section className="expo-scroll-section">
           <h2 className="expo-scroll-subtitle">Artiști</h2>
-          <ul className="expo-scroll-artists">
-            {exposition.artists.map((artist) => (
-              <li key={artist._id}>{artist.name}</li>
-            ))}
-          </ul>
+          {exposition.artists && exposition.artists.length > 0 ? (
+            <ul className="expo-scroll-artist-columns">
+              {exposition.artists.map((artist) => (
+                <li className="artist-name" key={artist._id}>{artist.name}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="expo-scroll-text">Nu sunt artiști asociați cu această expoziție.</p>
+          )}
         </section>
       </div>
     </div>

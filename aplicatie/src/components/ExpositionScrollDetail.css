@@ -46,14 +46,19 @@
     color: #333;
   }
   
-  .expo-scroll-artists {
+  .expo-scroll-artist-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px 40px;
     list-style: none;
-    padding-left: 0;
-    font-size: 1rem;
+    padding: 0;
+    margin-top: 16px;
   }
   
-  .expo-scroll-artists li {
-    margin-bottom: 10px;
+  .artist-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111;
   }
   
   @keyframes fadeInUp {
@@ -67,8 +72,22 @@
     }
   }
   
-  /* Mobile responsiveness */
-  @media (max-width: 768px) {
+  /* Responsive: 2 coloane pe tablete, 1 coloană pe mobil */
+  @media (max-width: 1024px) {
+    .expo-scroll-artist-columns {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    .expo-scroll-grid {
+      grid-template-columns: 1fr; /* pe tabletă devine o singură coloană */
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .expo-scroll-artist-columns {
+      grid-template-columns: 1fr;
+    }
+  
     .expo-scroll-content {
       padding: 40px 20px;
       margin-top: -80px;
@@ -87,5 +106,46 @@
     .expo-scroll-text {
       font-size: 0.95rem;
     }
+  
+    .expo-scroll-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  
+    .expo-scroll-label {
+      font-size: 1.2rem;
+    }
+  }
+  
+  .expo-scroll-location {
+    margin-top: 16px;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  /* NOU: Structura Despre (label + conținut în 2 coloane) */
+  .expo-scroll-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+    align-items: start;
+  }
+  
+  .expo-scroll-label {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  .expo-scroll-description {
+    font-size: 18px;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .expo-scroll-description p {
+    margin-bottom: 16px;
   }
   

@@ -1,0 +1,86 @@
+.artist-carousel-wrapper {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 30px 0;
+  }
+  
+  .artist-carousel {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 16px;
+    padding: 10px 0;
+  }
+  
+  .carousel-artist-card {
+    flex: 0 0 auto;
+    width: 180px;
+    height: 220px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+  }
+  
+  .carousel-artist-card img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    object-position: center;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .carousel-artist-card p {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    color: #222;
+  }
+  
+  .carousel-slide {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    animation-duration: 0.6s;
+    animation-fill-mode: both;
+    gap: 40px;
+    padding: 40px;
+    position: relative;
+    z-index: 2;
+  }
+  /* arrow buttons */
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    z-index: 2;
+    transition: transform 0.2s ease;
+  }
+  
+  .carousel-arrow:hover {
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  .carousel-arrow.left {
+    left: -10px;
+  }
+  
+  .carousel-arrow.right {
+    right: -10px;
+  }
+  
+  
+  

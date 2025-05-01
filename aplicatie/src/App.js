@@ -21,6 +21,7 @@ import LoginModal from './components/LoginModal';
 import RegisterModal from './components/RegisterModal';
 import ScrollToTop from './utils/ScrollToTop';
 import HeroCarousel from './components/HeroCarousel';
+import Favorites from './components/Favorites';
 
 import './App.css';
 
@@ -37,6 +38,7 @@ const AppContent = () => {
         <Route path="/expositions/:id" element={<ExpositionScrollDetail />} /> {/* ✅ Singura variantă activă */}
         <Route path="/artists" element={<ArtistList onTriggerLoginModal={openLoginModal} />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/favorites" element={<Favorites />} />
         <Route path="/hero" element={<HeroCarousel />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
