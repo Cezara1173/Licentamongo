@@ -4,6 +4,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require("cookie-parser");
+const sendConfirmationEmail = require('./utils/emailService');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -62,6 +63,9 @@ app.post('/api/register', async (req, res) => {
     const newUser = new User({ username, email, password: hashedPassword });
 
     await newUser.save();
+
+    await sendConfirmationEmail(email, username);
+
     res.status(201).json({ message: 'User înregistrat cu succes' });
   } catch (err) {
     if (err.code === 11000) {
@@ -115,7 +119,7 @@ app.post("/api/login", async (req, res) => {
         _id: user._id,
         email: user.email,
         username: user.username,
-        likedArtists: user.likedArtists || [], // 🔥 trimitem likedArtists
+        likedArtists: user.likedArtists || [], 
       },
     });
   } catch (err) {
