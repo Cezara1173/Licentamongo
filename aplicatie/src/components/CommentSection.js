@@ -1,7 +1,6 @@
-// src/components/CommentSection.js
-// src/components/CommentSection.js
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import axiosInstance from '../api/axiosInstance'; 
 import './CommentSection.css';
 
 const CommentSection = ({ productId }) => {
@@ -10,14 +9,11 @@ const CommentSection = ({ productId }) => {
   const [showAll, setShowAll] = useState(false);
   const { token } = useAuth();
 
-  // ✅ Fetch comments on mount or productId change
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/comments/${productId}`);
-        if (!res.ok) throw new Error('Failed to load comments');
-        const data = await res.json();
-        setComments(data);
+        const res = await axiosInstance.get(`/api/comments/${productId}`);
+        setComments(res.data);
       } catch (err) {
         console.error('Eroare la încărcarea comentariilor:', err.message);
       }
@@ -31,24 +27,16 @@ const CommentSection = ({ productId }) => {
     if (!token) return alert('Te rugăm să te loghezi pentru a comenta.');
 
     try {
-      const res = await fetch('http://localhost:5000/api/comments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': token,
-        },
-        body: JSON.stringify({ productId, text }),
+      const res = await axiosInstance.post('/api/comments', {
+        productId,
+        text,
       });
 
-      if (!res.ok) {
-        throw new Error('Eroare la adăugarea comentariului');
-      }
-
-      const newComment = await res.json();
-      setComments((prev) => [newComment, ...prev]);
+      setComments((prev) => [res.data, ...prev]);
       setText('');
     } catch (err) {
-      alert(err.message);
+      alert('Eroare la adăugarea comentariului');
+      console.error(err.response?.data || err.message);
     }
   };
 

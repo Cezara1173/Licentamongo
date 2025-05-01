@@ -449,8 +449,6 @@ app.get('/api/recomandate', verifyToken, async (req, res) => {
 });
 
 
-
-
 // Create a new comment
 app.post('/api/comments', verifyToken, async (req, res) => {
   const { productId, text } = req.body;

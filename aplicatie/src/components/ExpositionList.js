@@ -33,6 +33,7 @@ const ExpositionList = () => {
   const [activeSlide, setActiveSlide] = useState(0);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [locationFilter, setLocationFilter] = useState('');
   const scrollRef = useRef(null);
   const navigate = useNavigate();
   const { searchTerm } = useSearch();
@@ -73,6 +74,12 @@ const ExpositionList = () => {
       });
     }
 
+    if (locationFilter) {
+      result = result.filter((expo) =>
+        expo.location?.toLowerCase() === locationFilter.toLowerCase()
+      );
+    }
+
     if (searchTerm) {
       result = result.filter((expo) =>
         expo.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -80,7 +87,7 @@ const ExpositionList = () => {
     }
 
     setFiltered(deduplicateByTitleAndId(result));
-  }, [startDate, endDate, searchTerm, expositions]);
+  }, [startDate, endDate, locationFilter, searchTerm, expositions]);
 
   useEffect(() => {
     if (featuredExpos.length <= 1) return;
@@ -135,8 +142,8 @@ const ExpositionList = () => {
             </div>
           ))}
 
-          <button className="hero-arrow left" onClick={prevSlide}>&lt;</button>
-          <button className="hero-arrow right" onClick={nextSlide}>&gt;</button>
+          <button className="hero-arrow left" onClick={prevSlide}>&#10094;</button>
+          <button className="hero-arrow right" onClick={nextSlide}>&#10095;</button>
 
           <div className="hero-dots">
             {featuredExpos.map((_, index) => (
@@ -150,17 +157,34 @@ const ExpositionList = () => {
         </div>
       )}
 
-      {/* === Date filter & 2nd carousel === */}
+      {/* === Filters + Carousel === */}
       <div className="expo-container">
         <div className="date-filters">
           <span>Start Date - End Date</span>
           <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
           <span> - </span>
           <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+
+          <div className="location-filter">
+            <label htmlFor="locationSelect">Location</label>
+            <select
+              id="locationSelect"
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+            >
+              <option value="">Toate</option>
+              <option value="Bucuresti">București</option>
+              <option value="Cluj">Cluj</option>
+              <option value="Constanta">Constanța</option>
+              <option value="Iasi">Iași</option>
+              <option value="Sibiu">Sibiu</option>
+              <option value="Timisoara">Timișoara</option>
+            </select>
+          </div>
         </div>
 
         <div className="expo-carousel-wrapper">
-          <div className="expo-scroll-arrow left" onClick={scrollLeft}>&lt;</div>
+          <div className="expo-scroll-arrow left" onClick={scrollLeft}>&#10094;</div>
 
           <div className="expo-carousel" ref={scrollRef}>
             {filtered
@@ -174,7 +198,7 @@ const ExpositionList = () => {
               ))}
           </div>
 
-          <div className="expo-scroll-arrow right" onClick={scrollRight}>&gt;</div>
+          <div className="expo-scroll-arrow right" onClick={scrollRight}>&#10095;</div>
         </div>
       </div>
 

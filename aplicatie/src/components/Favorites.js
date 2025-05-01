@@ -69,7 +69,7 @@ const Favorites = () => {
       {recommendedExpositions.length === 0 ? (
         <div className="favorites-empty">
           <p className="favorites-empty-message">
-            Creează-ți propria listă de artiști preferați și descoperă expoziții pe gustul tău.
+            Descoperă artiștii preferați și crează-ți propria listă de expoziții pe gustul tău.
           </p>
         </div>
       ) : (
