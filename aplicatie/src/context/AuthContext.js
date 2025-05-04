@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (email, password, setError) => {
     try {
       const response = await fetch('http://localhost:5000/api/login', {
         method: 'POST',
@@ -40,36 +40,41 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, password }),
         credentials: 'include',
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         setAuthState({ token: data.token, user: data.user });
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-
-        // Salvează likedArtists în localStorage
+  
         if (data.user?.likedArtists?.length) {
-          localStorage.setItem(
-            `likedArtists_${data.user._id}`,
-            JSON.stringify(data.user.likedArtists)
-          );
+          localStorage.setItem(`likedArtists_${data.user._id}`, JSON.stringify(data.user.likedArtists));
         }
+  
+        return { success: true };
       } else {
-        const message = data.message?.toLowerCase() || '';
-        if (message.includes('contul nu a fost găsit') || message.includes('user not found')) {
-          alert('Contul nu a fost găsit. Creează-ți un cont și devino membru ArtHunt!');
-        } else if (message.includes('parola introdusă nu este corectă') || message.includes('wrong password')) {
-          alert('Parola introdusă nu este corectă.');
-        } else {
-          alert(data.message || 'Autentificare eșuată.');
+        const msg = data.message?.toLowerCase() || '';
+  
+        if (msg.includes('contul nu a fost găsit')) {
+          setError('Contul nu a fost găsit. Creează-ți un cont și devino membru ArtHunt!');
+          return { success: false, field: 'email' };
         }
+  
+        if (msg.includes('parola introdusă nu este corectă')) {
+          setError('Parola introdusă nu este corectă.');
+          return { success: false, field: 'password' };
+        }
+  
+        setError(data.message || 'Autentificare eșuată.');
+        return { success: false };
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('Eroare la login.');
+      setError('Eroare la login.');
+      return { success: false };
     }
-  };
+  };  
 
   const register = async (email, password) => {
     try {
@@ -111,7 +116,6 @@ export const AuthProvider = ({ children }) => {
       });
 
       setAuthState({ token: null, user: null });
-
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       localStorage.removeItem('cart');

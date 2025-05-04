@@ -13,7 +13,7 @@ const ProductList = () => {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
 
-  const { token } = useAuth(); // ✅ user removed
+  const { token } = useAuth();
   const { searchTerm } = useSearch();
   const { openLoginModal } = useLoginModal();
   const { cartItems, addToCart } = useCart();
@@ -69,6 +69,11 @@ const ProductList = () => {
     addToCart(product);
   };
 
+  const clearFilters = () => {
+    setMinPrice('');
+    setMaxPrice('');
+  };
+
   return (
     <>
       <div className="hero-banner-container">
@@ -88,10 +93,23 @@ const ProductList = () => {
 
       <div className="product-list">
         <div className="filter-controls">
+          <button className="clear-filters-btn" onClick={clearFilters}>
+            Clear filters
+          </button>
           <label htmlFor="minPrice">Preț Minim:</label>
-          <input type="number" id="minPrice" value={minPrice} onChange={e => setMinPrice(e.target.value)} />
+          <input
+            type="number"
+            id="minPrice"
+            value={minPrice}
+            onChange={e => setMinPrice(e.target.value)}
+          />
           <label htmlFor="maxPrice">Preț Maxim:</label>
-          <input type="number" id="maxPrice" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} />
+          <input
+            type="number"
+            id="maxPrice"
+            value={maxPrice}
+            onChange={e => setMaxPrice(e.target.value)}
+          />
         </div>
 
         {filteredProducts.length === 0 ? (

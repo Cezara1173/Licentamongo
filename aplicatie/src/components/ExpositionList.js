@@ -66,11 +66,13 @@ const ExpositionList = () => {
     let result = [...expositions];
 
     if (startDate || endDate) {
+      const from = startDate ? new Date(startDate) : new Date('2000-01-01');
+      const to = endDate ? new Date(endDate) : new Date('3000-01-01');
+
       result = result.filter((expo) => {
-        const expoDate = new Date(expo.startDate);
-        const from = startDate ? new Date(startDate) : new Date('2000-01-01');
-        const to = endDate ? new Date(endDate) : new Date('3000-01-01');
-        return expoDate >= from && expoDate <= to;
+        const expoStart = new Date(expo.startDate);
+        const expoEnd = new Date(expo.endDate);
+        return expoStart <= to && expoEnd >= from;
       });
     }
 
@@ -107,6 +109,12 @@ const ExpositionList = () => {
 
   const handleClick = (expoId) => {
     navigate(`/expositions/${expoId}`);
+  };
+
+  const clearFilters = () => {
+    setStartDate('');
+    setEndDate('');
+    setLocationFilter('');
   };
 
   const prevSlide = () => {
@@ -157,32 +165,38 @@ const ExpositionList = () => {
         </div>
       )}
 
-      {/* === Filters + Carousel === */}
+      {/* === Filters === */}
       <div className="expo-container">
-        <div className="date-filters">
-          <span>Start Date - End Date</span>
-          <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-          <span> - </span>
-          <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+      <div className="date-filters">
+      <button className="clear-filters-btn" onClick={clearFilters}>
+       Clear filters
+      </button>
 
-          <div className="location-filter">
-            <label htmlFor="locationSelect">Location</label>
-            <select
-              id="locationSelect"
-              value={locationFilter}
-              onChange={(e) => setLocationFilter(e.target.value)}
-            >
-              <option value="">Toate</option>
-              <option value="Bucuresti">București</option>
-              <option value="Cluj">Cluj</option>
-              <option value="Constanta">Constanța</option>
-              <option value="Iasi">Iași</option>
-              <option value="Sibiu">Sibiu</option>
-              <option value="Timisoara">Timișoara</option>
-            </select>
-          </div>
-        </div>
+  <span>Start Date - End Date</span>
+  <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+  <span> - </span>
+  <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
 
+  <div className="location-filter">
+    <label htmlFor="locationSelect">Location</label>
+    <select
+      id="locationSelect"
+      value={locationFilter}
+      onChange={(e) => setLocationFilter(e.target.value)}
+    >
+      <option value="">Toate</option>
+      <option value="Bucuresti">București</option>
+      <option value="Cluj">Cluj</option>
+      <option value="Constanta">Constanța</option>
+      <option value="Iasi">Iași</option>
+      <option value="Sibiu">Sibiu</option>
+      <option value="Timisoara">Timișoara</option>
+    </select>
+  </div>
+</div>
+
+
+        {/* === Carousel === */}
         <div className="expo-carousel-wrapper">
           <div className="expo-scroll-arrow left" onClick={scrollLeft}>&#10094;</div>
 
@@ -202,7 +216,7 @@ const ExpositionList = () => {
         </div>
       </div>
 
-      {/* === Flat Exposition List === */}
+      {/* === Flat List === */}
       <div className="expo-list" style={{ marginTop: '20px' }}>
         {filtered.map((expo) => (
           <div className="expo-list-item" key={expo._id} onClick={() => handleClick(expo._id)}>

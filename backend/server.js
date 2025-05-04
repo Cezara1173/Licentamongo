@@ -4,7 +4,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require("cookie-parser");
-const sendConfirmationEmail = require('./utils/emailService');
+const { sendConfirmationEmail, sendResetEmail } = require('./utils/emailService');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -90,7 +90,6 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-
 // Login
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
@@ -125,6 +124,45 @@ app.post("/api/login", async (req, res) => {
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ message: "Eroare server la autentificare." });
+  }
+});
+
+//forgot password
+app.post('/api/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ message: 'Emailul nu există.' });
+
+  const token = jwt.sign({ userId: user._id }, 'reset_secret_key', { expiresIn: '15m' });
+
+  const resetLink = `http://localhost:3000/reset-password/${token}`;
+  await sendResetEmail(email, user.username, resetLink);
+
+  res.json({ message: 'Emailul de resetare a fost trimis.' });
+});
+
+app.post('/api/reset-password/:token', async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    // Verifică tokenul
+    const decoded = jwt.verify(token, 'reset_secret_key');
+    const userId = decoded.userId;
+
+    // Găsește utilizatorul
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'Utilizatorul nu a fost găsit.' });
+
+    // Hash noua parolă
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ message: 'Parola a fost resetată cu succes.' });
+  } catch (err) {
+    console.error('Eroare la resetarea parolei:', err.message);
+    res.status(400).json({ message: 'Token invalid sau expirat.' });
   }
 });
 
