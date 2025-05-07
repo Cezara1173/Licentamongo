@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useSearch } from '../context/SearchContext';
 import { Link } from 'react-router-dom';
 import './Favorites.css';
 
 const Favorites = () => {
   const { token, user } = useAuth();
+  const { searchTerm } = useSearch();
+
   const [recommendedExpositions, setRecommendedExpositions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +20,6 @@ const Favorites = () => {
           withCredentials: true,
         });
 
-        // 🔁 Eliminăm duplicatele după expo._id
         const uniqueExpos = [];
         const seenIds = new Set();
 
@@ -40,6 +42,10 @@ const Favorites = () => {
       fetchRecommendedExpositions();
     }
   }, [user, token]);
+
+  const filteredExpos = recommendedExpositions.filter((expo) =>
+    expo.title.toLowerCase().includes((searchTerm || '').toLowerCase())
+  );
 
   if (!user) {
     return (
@@ -66,15 +72,17 @@ const Favorites = () => {
       <h1 className="favorites-title">Preferate</h1>
       <div className="favorites-underline" />
 
-      {recommendedExpositions.length === 0 ? (
+      {filteredExpos.length === 0 ? (
         <div className="favorites-empty">
           <p className="favorites-empty-message">
-            Descoperă artiștii preferați și crează-ți propria listă de expoziții pe gustul tău.
+            {searchTerm
+              ? 'Nu am găsit expoziții care corespund căutării.'
+              : 'Descoperă artiștii preferați și crează-ți propria listă de expoziții pe gustul tău.'}
           </p>
         </div>
       ) : (
         <div className="favorites-list">
-          {recommendedExpositions.map((expo) => (
+          {filteredExpos.map((expo) => (
             <Link to={`/expositions/${expo._id}`} key={expo._id} className="favorites-item">
               <img src={expo.image} alt={expo.title} className="favorites-image" />
               <div className="favorites-info">

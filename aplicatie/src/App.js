@@ -24,6 +24,8 @@ import HeroCarousel from './components/HeroCarousel';
 import Favorites from './components/Favorites';
 import ResetPasswordRequest from './components/ResetPasswordRequest';
 import ResetPasswordForm from './components/ResetPasswordForm';
+import ProfilePage from './components/ProfilePage';
+import OrdersPage from './components/OrdersPage';
 
 import './App.css';
 
@@ -42,8 +44,10 @@ const AppContent = () => {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/hero" element={<HeroCarousel />} />
-        <Route path="/reset-password" element={<ResetPasswordRequest />} /> 
+        <Route path="/reset-password" element={<ResetPasswordRequest />} />
         <Route path="/reset-password/:token" element={<ResetPasswordForm />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/orders" element={<OrdersPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>

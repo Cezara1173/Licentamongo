@@ -209,29 +209,74 @@ app.get('/api/products/search', async (req, res) => {
   }
 });
 
-
-// Routes for Orders
-app.post('/api/orders', verifyToken, async (req, res) => {
-  const order = new Order({
-    userId: new mongoose.Types.ObjectId(req.userId),
-    products: req.body.products.map(product => ({
-      productId: new mongoose.Types.ObjectId(product.productId),
-      quantity: product.quantity,
-      price: product.price,
-    })),
-    totalPrice: req.body.totalPrice,
-    orderStatus: req.body.orderStatus,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    shippingAddress: req.body.shippingAddress,
-    paymentMethod: req.body.paymentMethod,
-    paymentStatus: req.body.paymentStatus,
-  });
-
+// Delete product - only for admin
+app.delete('/api/products/:id', verifyToken, async (req, res) => {
   try {
+    // Obținem emailul utilizatorului logat
+    const user = await User.findById(req.userId);
+    if (!user || user.email !== 'admin@yahoo.com') {
+      return res.status(403).json({ message: 'Doar administratorul poate șterge produse.' });
+    }
+
+    const deleted = await Product.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: 'Produsul nu a fost găsit.' });
+    }
+
+    res.status(200).json({ message: 'Produsul a fost șters cu succes.' });
+  } catch (err) {
+    console.error('Eroare la ștergere produs:', err);
+    res.status(500).json({ message: 'Eroare server la ștergerea produsului.' });
+  }
+});
+ 
+
+// Create Order and update product stock
+app.post('/api/orders', verifyToken, async (req, res) => {
+  try {
+    const order = new Order({
+      userId: new mongoose.Types.ObjectId(req.userId),
+      products: req.body.products.map(product => ({
+        productId: new mongoose.Types.ObjectId(product.productId),
+        quantity: product.quantity,
+        price: product.price,
+      })),
+      totalPrice: req.body.totalPrice,
+      orderStatus: req.body.orderStatus,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      shippingAddress: req.body.shippingAddress,
+      paymentMethod: req.body.paymentMethod,
+      paymentStatus: req.body.paymentStatus,
+    });
+
+    // Verificare stoc pentru fiecare produs înainte de salvare
+    for (const item of order.products) {
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        return res.status(404).json({ message: `Produsul cu ID ${item.productId} nu a fost găsit.` });
+      }
+
+      if (product.stock < item.quantity) {
+        return res.status(400).json({ message: `Stoc insuficient pentru produsul ${product.name}.` });
+      }
+    }
+
+    // Salvare comandă
     const newOrder = await order.save();
+
+    // Actualizare stocuri
+    for (const item of order.products) {
+      await Product.findByIdAndUpdate(
+        item.productId,
+        { $inc: { stock: -item.quantity } },
+        { new: true }
+      );
+    }
+
     res.status(201).json(newOrder);
   } catch (err) {
+    console.error("Eroare la salvarea comenzii:", err);
     res.status(400).json({ message: err.message });
   }
 });
@@ -523,6 +568,26 @@ app.get('/api/comments/:productId', async (req, res) => {
     res.json(comments);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch comments', error: err.message });
+  }
+});
+
+// Delete comment - only for admin
+app.delete('/api/comments/:id', verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user || user.email !== 'admin@yahoo.com') {
+      return res.status(403).json({ message: 'Doar administratorul poate șterge comentarii.' });
+    }
+
+    const deletedComment = await Comment.findByIdAndDelete(req.params.id);
+    if (!deletedComment) {
+      return res.status(404).json({ message: 'Comentariul nu a fost găsit.' });
+    }
+
+    res.status(200).json({ message: 'Comentariul a fost șters cu succes.' });
+  } catch (err) {
+    console.error('Eroare la ștergerea comentariului:', err);
+    res.status(500).json({ message: 'Eroare server la ștergerea comentariului.' });
   }
 });
 

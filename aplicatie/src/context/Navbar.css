@@ -99,6 +99,19 @@ html, body {
   font-size: 15px;
 }
 
+/* ✅ NOU: icon profil user */
+.navbar-profile-icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  transition: transform 0.2s ease;
+}
+
+.navbar-profile-icon:hover {
+  transform: scale(1.15);
+  color: #000;
+}
+
 .navbar-user button {
   background-color: #4d2753;
   border: none;

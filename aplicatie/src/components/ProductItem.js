@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import { FaRegComment } from 'react-icons/fa';
+import { FaRegComment, FaTrashAlt } from 'react-icons/fa';
 import './ProductList.css';
 
 import CommentSection from './CommentSection';
+import InfoModal from './InfoModal'; 
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
-const ProductItem = ({ product, onTriggerLoginModal }) => {
-  const { token } = useAuth();
+const ProductItem = ({ product, onTriggerLoginModal, onAddToCart, onDeleteClick }) => {
+  const { token, user } = useAuth();
   const { addToCart } = useCart();
 
   const [showComments, setShowComments] = useState(false);
+  const [refreshComments, setRefreshComments] = useState(false);
+  const [showStockModal, setShowStockModal] = useState(false);
+
+  const isAdmin = user?.email === 'admin@yahoo.com';
 
   const handleAddToCart = () => {
     if (!token) {
@@ -21,7 +26,7 @@ const ProductItem = ({ product, onTriggerLoginModal }) => {
     if (product.stock > 0) {
       addToCart(product);
     } else {
-      alert("Stoc epuizat!");
+      setShowStockModal(true);
     }
   };
 
@@ -37,10 +42,19 @@ const ProductItem = ({ product, onTriggerLoginModal }) => {
     setShowComments(prev => !prev);
   };
 
+  const handleDelete = () => {
+    onDeleteClick(product._id);
+  };
+
   return (
     <div className="product-item">
       <div className="product-image-wrapper">
         <img src={product.images?.[0]} alt={product.name} />
+        {isAdmin && (
+          <div className="delete-icon" onClick={handleDelete} title="Șterge produsul">
+            <FaTrashAlt />
+          </div>
+        )}
       </div>
 
       <div className="product-icons">
@@ -60,7 +74,21 @@ const ProductItem = ({ product, onTriggerLoginModal }) => {
         <button onClick={handleAddToCart}>Adaugă în coș</button>
       </div>
 
-      {showComments && <CommentSection productId={product._id} />}
+      {showComments && (
+        <CommentSection
+          productId={product._id}
+          isAdmin={isAdmin}
+          refreshToggle={refreshComments}
+        />
+      )}
+
+      {showStockModal && (
+        <InfoModal
+          message="Stoc epuizat!"
+          type="info"
+          onClose={() => setShowStockModal(false)}
+        />
+      )}
     </div>
   );
 };

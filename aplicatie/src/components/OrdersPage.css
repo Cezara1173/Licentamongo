@@ -1,0 +1,50 @@
+.orders-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .orders-title {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 0.5rem;
+  }
+  
+  .orders-underline {
+    width: 80px;
+    height: 3px;
+    background-color: black;
+    margin-bottom: 2rem;
+  }
+  
+  .orders-message {
+    font-size: 1.2rem;
+    color: #555;
+    text-align: center;
+    margin-top: 4rem;
+  }
+  
+  .orders-list {
+    margin-top: 3rem;
+  }
+  
+  .order-item {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+  
+  .order-item p {
+    margin: 0.4rem 0;
+    color: #333;
+  }
+  
+  .order-item ul {
+    margin-top: 0.5rem;
+    padding-left: 1.2rem;
+    list-style-type: disc;
+  }
+  

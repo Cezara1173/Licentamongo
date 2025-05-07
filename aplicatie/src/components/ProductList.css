@@ -65,14 +65,50 @@ body {
 .filter-controls label {
   font-weight: 500;
   font-size: 16px;
+  min-width: max-content;
 }
 
-.filter-controls input {
+.filter-controls input,
+.filter-controls select {
   padding: 8px 12px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  font-size: 16px;
+  height: 40px;
+  min-width: 140px;
+  box-sizing: border-box;
+}
+
+.clear-filters-btn {
+  background: none;
+  border: 1px solid #ccc;
+  padding: 10px 16px;
   font-size: 15px;
-  width: 120px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-right: 20px;
+  transition: transform 0.15s ease, background 0.2s;
+}
+
+.clear-filters-btn:hover {
+  transform: scale(1.04);
+  background: #f5f5f5;
+}
+
+.artist-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.artist-filter label {
+  font-size: 16px;
+  color: #000;
+}
+
+.artist-filter select {
+  cursor: pointer;
 }
 
 /* ===== Product Grid ===== */
@@ -175,6 +211,13 @@ body {
   margin-bottom: 10px;
 }
 
+.product-stock {
+  font-size: 14px;
+  color: #666;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
 /* ===== Add to Cart Button ===== */
 .product-button-wrapper {
   margin-top: auto;
@@ -230,12 +273,6 @@ body {
     font-size: 1rem;
   }
 }
-.product-stock {
-  font-size: 14px;
-  color: #666;
-  margin-top: 4px;
-  margin-bottom: 8px;
-}
 
 .view-comments-sub {
   font-size: 14px;
@@ -244,19 +281,26 @@ body {
   cursor: pointer;
   user-select: none;
 }
-.clear-filters-btn {
-  background: none;
-  border: 1px solid #ccc;
-  padding: 10px 16px;
-  font-size: 15px;
-  font-weight: 500;
+.delete-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  border-radius: 50%;
+  padding: 8px;
+  font-size: 18px;
+  color: rgb(68, 27, 104);
   cursor: pointer;
-  border-radius: 6px;
-  margin-right: 20px;
-  transition: transform 0.15s ease, background 0.2s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
 }
-
-.clear-filters-btn:hover {
-  transform: scale(1.04);
-  background: #f5f5f5;
+.product-item:hover .delete-icon {
+  opacity: 1;
+  pointer-events: auto;
+}
+.delete-icon:hover {
+  transform: scale(1.1);
 }

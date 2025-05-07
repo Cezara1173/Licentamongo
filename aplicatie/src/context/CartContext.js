@@ -9,12 +9,12 @@ export const CartProvider = ({ children }) => {
     return JSON.parse(localStorage.getItem('cart')) || [];
   });
 
-  // 🔄 Salvează cartul în localStorage la fiecare modificare
+  // 🧠 Salvează cart-ul în localStorage la fiecare modificare
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // 🔐 Verifică dacă token-ul este expirat
+  // ✅ Verificare expirare token
   const isTokenExpired = (token) => {
     try {
       const decoded = JSON.parse(atob(token.split('.')[1]));
@@ -24,7 +24,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // 🔁 La schimbarea tokenului, dacă e expirat/gol => goliți coșul
+  // ⛔ Golește coșul dacă tokenul este expirat sau inexistent
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     if (!storedToken || isTokenExpired(storedToken)) {
@@ -33,7 +33,7 @@ export const CartProvider = ({ children }) => {
     }
   }, [token]);
 
-  // ➕ Adaugă un produs în coș
+  // ➕ Adaugă produs în coș
   const addToCart = (product) => {
     setCartItems(prev => {
       const existing = prev.find(item => item._id === product._id);
@@ -48,23 +48,34 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  // ➖ Elimină produsul după id
+  // ➖ Elimină un produs din coș
   const removeFromCart = (productId) => {
     setCartItems(prev => prev.filter(item => item._id !== productId));
   };
 
-  // 🧹 Golește coșul complet
+  // 🧼 Golește complet coșul (ex: după comandă reușită)
   const clearCart = () => {
     setCartItems([]);
     localStorage.removeItem('cart');
   };
 
+  // 🧠 Obține cantitatea unui produs din coș (folosit în ProductList pentru calcul stoc vizual)
+  const getCartQuantity = (productId) => {
+    const product = cartItems.find(item => item._id === productId);
+    return product ? product.quantity : 0;
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{
+      cartItems,
+      addToCart,
+      removeFromCart,
+      clearCart,
+      getCartQuantity
+    }}>
       {children}
     </CartContext.Provider>
   );
 };
 
-// 🎯 Hook custom pentru acces
 export const useCart = () => useContext(CartContext);

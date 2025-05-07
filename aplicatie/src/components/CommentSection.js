@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import axiosInstance from '../api/axiosInstance'; 
+import axiosInstance from '../api/axiosInstance';
 import './CommentSection.css';
+import { FaTrashAlt } from 'react-icons/fa';
 
 const CommentSection = ({ productId }) => {
   const [comments, setComments] = useState([]);
   const [text, setText] = useState('');
   const [showAll, setShowAll] = useState(false);
-  const { token } = useAuth();
+
+  const { token, user } = useAuth();
+  const isAdmin = user?.email === 'admin@yahoo.com';
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -27,16 +30,23 @@ const CommentSection = ({ productId }) => {
     if (!token) return alert('Te rugăm să te loghezi pentru a comenta.');
 
     try {
-      const res = await axiosInstance.post('/api/comments', {
-        productId,
-        text,
-      });
-
+      const res = await axiosInstance.post('/api/comments', { productId, text });
       setComments((prev) => [res.data, ...prev]);
       setText('');
     } catch (err) {
       alert('Eroare la adăugarea comentariului');
       console.error(err.response?.data || err.message);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await axiosInstance.delete(`/api/comments/${commentId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setComments((prev) => prev.filter((c) => c._id !== commentId));
+    } catch (err) {
+      console.error('Eroare la ștergerea comentariului:', err);
     }
   };
 
@@ -47,16 +57,27 @@ const CommentSection = ({ productId }) => {
       {visibleComments.length > 0 ? (
         visibleComments.map((comment) => (
           <div key={comment._id} className="comment">
-            <strong>{comment.user?.username || 'Utilizator șters'}</strong>{' '}
-            <span className="comment-date">
-              {new Date(comment.createdAt).toLocaleString('ro-RO', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </span>
+            <div className="comment-header">
+              <div>
+                <strong>{comment.user?.username || 'Utilizator șters'}</strong>{' '}
+                <span className="comment-date">
+                  {new Date(comment.createdAt).toLocaleString('ro-RO', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </span>
+              </div>
+              {isAdmin && (
+                <FaTrashAlt
+                  className="comment-trash-icon"
+                  onClick={() => handleDeleteComment(comment._id)}
+                  title="Șterge comentariul"
+                />
+              )}
+            </div>
             <div>{comment.text}</div>
           </div>
         ))

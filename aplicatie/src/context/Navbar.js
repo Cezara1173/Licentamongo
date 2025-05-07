@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { useSearch } from './SearchContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa';
 import './Navbar.css';
 
 const Navbar = ({ onLoginClick, onRegisterClick }) => {
@@ -22,6 +23,10 @@ const Navbar = ({ onLoginClick, onRegisterClick }) => {
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const goToProfile = () => {
+    navigate('/profile');
   };
 
   return (
@@ -48,17 +53,14 @@ const Navbar = ({ onLoginClick, onRegisterClick }) => {
           <li><Link to="/productlist">Products</Link></li>
           <li><Link to="/artists">Artists</Link></li>
           <li><Link to="/expositions">Expositions</Link></li>
-          {user && (
-        <li><Link to="/favorites">Favorites</Link></li> 
-         )}
-          {user && (
-            <li><Link to="/cart">Cart</Link></li>
-          )}
+          {user && <li><Link to="/favorites">Favorites</Link></li>}
+          {user && <li><Link to="/cart">Cart</Link></li>}
         </ul>
 
         {user ? (
           <div className="navbar-user">
             <span className="welcome-message">Welcome, {user.username || user.email}</span>
+            <FaUserCircle className="navbar-profile-icon" onClick={goToProfile} />
             <button className="logout-btn" onClick={handleLogout}>Logout</button>
           </div>
         ) : (

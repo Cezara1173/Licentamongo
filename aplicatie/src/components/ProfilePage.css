@@ -1,0 +1,78 @@
+.profile-page {
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .profile-container {
+    display: flex;
+    flex-direction: row;
+    gap: 60px;
+    max-width: 900px;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 30px 40px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  
+  /* Stânga */
+  .profile-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .profile-avatar {
+    width: 90px;
+    height: 90px;
+    background-color: #e6d2e8;
+    border-radius: 50%;
+    font-size: 36px;
+    font-weight: bold;
+    color: #4d2753;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-left h2 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .profile-left p {
+    font-size: 16px;
+    margin: 4px 0;
+    color: #555;
+  }
+  
+  /* Dreapta */
+  .profile-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .profile-link-btn {
+    text-decoration: none;
+    padding: 12px 24px;
+    background-color: #4d2753;
+    color: white;
+    font-weight: 500;
+    font-size: 16px;
+    border-radius: 9999px;
+    text-align: center;
+    transition: background 0.2s ease;
+  }
+  
+  .profile-link-btn:hover {
+    background-color: black;
+  }
+  
