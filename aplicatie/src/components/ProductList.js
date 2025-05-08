@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { useSearch } from '../context/SearchContext';
 import { useLoginModal } from '../context/LoginModalContext';
 import { useCart } from '../context/CartContext';
+import { useStockModal } from '../context/StockModalContext'; // ✅ import context
 import './ProductList.css';
 
 const ProductList = () => {
@@ -21,12 +22,10 @@ const ProductList = () => {
   const { searchTerm } = useSearch();
   const { openLoginModal } = useLoginModal();
   const { cartItems, addToCart } = useCart();
+  const { openStockModal } = useStockModal(); // ✅ folosește contextul
 
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const [showStockModal, setShowStockModal] = useState(false);
-  const [stockModalMessage, setStockModalMessage] = useState('');
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -93,8 +92,7 @@ const ProductList = () => {
     const adjustedStock = product.stock - cartQuantity;
 
     if (adjustedStock <= 0) {
-      setStockModalMessage('Stoc epuizat!');
-      setShowStockModal(true);
+      openStockModal(); // ✅ folosește modalul global
       return;
     }
 
@@ -194,7 +192,7 @@ const ProductList = () => {
                 onAddToCart={handleAddToCart}
                 onTriggerLoginModal={openLoginModal}
                 onDeleteClick={handleDeleteClick}
-                onRequestDeleteComment={handleInstantDeleteComment} // direct delete
+                onRequestDeleteComment={handleInstantDeleteComment}
               />
             ))}
           </div>
@@ -207,14 +205,6 @@ const ProductList = () => {
           type="confirm"
           onConfirm={handleDeleteConfirm}
           onClose={() => setShowDeleteModal(false)}
-        />
-      )}
-
-      {showStockModal && (
-        <InfoModal
-          message={stockModalMessage}
-          type="info"
-          onClose={() => setShowStockModal(false)}
         />
       )}
     </>

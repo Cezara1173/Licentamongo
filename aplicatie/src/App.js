@@ -9,6 +9,7 @@ import { AuthProvider } from './context/AuthContext';
 import { SearchProvider } from './context/SearchContext';
 import { CartProvider } from './context/CartContext';
 import { LoginModalProvider, useLoginModal } from './context/LoginModalContext';
+import { StockModalProvider, useStockModal } from './context/StockModalContext';
 
 import Navbar from './context/Navbar';
 import Footer from './components/Footer';
@@ -26,11 +27,13 @@ import ResetPasswordRequest from './components/ResetPasswordRequest';
 import ResetPasswordForm from './components/ResetPasswordForm';
 import ProfilePage from './components/ProfilePage';
 import OrdersPage from './components/OrdersPage';
+import StockModal from './components/StockModal';
 
 import './App.css';
 
 const AppContent = () => {
   const { openLoginModal } = useLoginModal();
+  const { isStockModalOpen, closeStockModal } = useStockModal();
 
   return (
     <>
@@ -50,6 +53,8 @@ const AppContent = () => {
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+
+      {isStockModalOpen && <StockModal onClose={closeStockModal} />}
     </>
   );
 };
@@ -92,9 +97,11 @@ const App = () => {
     <AuthProvider>
       <SearchProvider>
         <LoginModalProvider>
-          <CartProvider>
-            <AppWrapper />
-          </CartProvider>
+          <StockModalProvider>
+            <CartProvider>
+              <AppWrapper />
+            </CartProvider>
+          </StockModalProvider>
         </LoginModalProvider>
       </SearchProvider>
     </AuthProvider>

@@ -3,7 +3,6 @@ import { FaRegComment, FaTrashAlt } from 'react-icons/fa';
 import './ProductList.css';
 
 import CommentSection from './CommentSection';
-import InfoModal from './InfoModal'; 
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
@@ -13,7 +12,6 @@ const ProductItem = ({ product, onTriggerLoginModal, onAddToCart, onDeleteClick 
 
   const [showComments, setShowComments] = useState(false);
   const [refreshComments, setRefreshComments] = useState(false);
-  const [showStockModal, setShowStockModal] = useState(false);
 
   const isAdmin = user?.email === 'admin@yahoo.com';
 
@@ -23,11 +21,7 @@ const ProductItem = ({ product, onTriggerLoginModal, onAddToCart, onDeleteClick 
       return;
     }
 
-    if (product.stock > 0) {
-      addToCart(product);
-    } else {
-      setShowStockModal(true);
-    }
+    onAddToCart(product); // delegă verificarea stocului la ProductList
   };
 
   const handleIconClick = () => {
@@ -79,14 +73,6 @@ const ProductItem = ({ product, onTriggerLoginModal, onAddToCart, onDeleteClick 
           productId={product._id}
           isAdmin={isAdmin}
           refreshToggle={refreshComments}
-        />
-      )}
-
-      {showStockModal && (
-        <InfoModal
-          message="Stoc epuizat!"
-          type="info"
-          onClose={() => setShowStockModal(false)}
         />
       )}
     </div>

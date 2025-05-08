@@ -156,3 +156,35 @@
 .cancel-btn:hover {
   background-color: #ddd;
 }
+
+.reply-button {
+  font-size: 13px;
+  color: #6a2576;
+  cursor: pointer;
+  margin-left: 12px;
+}
+
+.reply-button:hover {
+  text-decoration: underline;
+}
+
+.reply {
+  margin-left: 25px;
+  padding: 6px 10px;
+  background-color: #f9f9f9;
+  border-left: 2px solid #ccc;
+  margin-top: 8px;
+  border-radius: 6px;
+}
+
+.reply-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  margin-left: 20px;
+}
+
+.reply-form input {
+  flex: 1;
+  padding: 6px;
+}

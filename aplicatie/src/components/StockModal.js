@@ -1,5 +1,5 @@
 import React from 'react';
-import './InfoModal.css'; 
+import './InfoModal.css';
 
 const StockModal = ({ onClose }) => {
   return (
