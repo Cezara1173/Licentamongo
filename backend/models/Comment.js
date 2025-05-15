@@ -5,13 +5,7 @@ const commentSchema = new mongoose.Schema({
   product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
   text: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
-
-  
-  parentCommentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment',
-    default: null
-  }
+  replyTo: { type: mongoose.Schema.Types.ObjectId, ref: 'Comment', default: null }
 });
 
 module.exports = mongoose.model('Comment', commentSchema);

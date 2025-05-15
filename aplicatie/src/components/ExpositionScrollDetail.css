@@ -148,4 +148,44 @@
   .expo-scroll-description p {
     margin-bottom: 16px;
   }
+  .edit-floating-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background-color: #9333ea;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    z-index: 1000;
+  }
+  .edit-floating-btn:hover {
+    background-color: #7e22ce;
+  }
+  .expo-edit-inline {
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    background: transparent;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px 6px;
+    width: 100%;
+    max-width: 800px;
+    resize: vertical;
+  }
+  .edit-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: #9333ea;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .edit-link:hover {
+    text-decoration: underline;
+    color: #7e22ce;
+  }
   

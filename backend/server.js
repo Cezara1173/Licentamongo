@@ -235,22 +235,22 @@ app.delete('/api/products/:id', verifyToken, async (req, res) => {
 app.post('/api/orders', verifyToken, async (req, res) => {
   try {
     const order = new Order({
-      userId: new mongoose.Types.ObjectId(req.userId),
+      userId: req.userId,
       products: req.body.products.map(product => ({
-        productId: new mongoose.Types.ObjectId(product.productId),
+        productId: product.productId,
         quantity: product.quantity,
         price: product.price,
       })),
       totalPrice: req.body.totalPrice,
-      orderStatus: req.body.orderStatus,
+      orderStatus: req.body.orderStatus || 'Finalizată',
       createdAt: new Date(),
       updatedAt: new Date(),
-      shippingAddress: req.body.shippingAddress,
-      paymentMethod: req.body.paymentMethod,
-      paymentStatus: req.body.paymentStatus,
+      shippingAddress: req.body.shippingAddress || {},
+      paymentMethod: req.body.paymentMethod || 'PayPal',
+      paymentStatus: req.body.paymentStatus || 'Plătit',
     });
 
-    // Verificare stoc pentru fiecare produs înainte de salvare
+    // Verificare stoc pentru fiecare produs
     for (const item of order.products) {
       const product = await Product.findById(item.productId);
       if (!product) {
@@ -262,10 +262,10 @@ app.post('/api/orders', verifyToken, async (req, res) => {
       }
     }
 
-    // Salvare comandă
+    // Salvăm comanda
     const newOrder = await order.save();
 
-    // Actualizare stocuri
+    // Actualizare stoc (definitivă, NU mai resetăm ulterior)
     for (const item of order.products) {
       await Product.findByIdAndUpdate(
         item.productId,
@@ -274,7 +274,7 @@ app.post('/api/orders', verifyToken, async (req, res) => {
       );
     }
 
-    res.status(201).json(newOrder);
+    res.status(201).json({ message: 'Comandă înregistrată cu succes.', order: newOrder });
   } catch (err) {
     console.error("Eroare la salvarea comenzii:", err);
     res.status(400).json({ message: err.message });
@@ -290,14 +290,19 @@ app.get('/api/orders', verifyToken, async (req, res) => {
   }
 });
 
-app.get('/api/orders/:userId', verifyToken, async (req, res) => {
+// Get all orders for current user
+app.get('/api/orders/me', verifyToken, async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req.params.userId });
+    const orders = await Order.find({ userId: req.userId })
+      .populate('products.productId', 'name image'); // <--- aici adăugăm
+
     res.json(orders);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
+
 
 // Routes for Artists
 app.get('/api/artists', async (req, res) => {
@@ -391,6 +396,24 @@ app.get('/api/expositions', async (req, res) => {
     res.json(expositions);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+app.put('/api/artists/:id/bio', verifyToken, async (req, res) => {
+  const { bio } = req.body;
+  const artistId = req.params.id;
+
+  try {
+    const user = await User.findById(req.userId);
+    if (!user || user.email !== 'admin@yahoo.com') {
+      return res.status(403).json({ message: 'Doar adminul poate edita bio-ul.' });
+    }
+
+    const artist = await Artist.findByIdAndUpdate(artistId, { bio }, { new: true });
+    if (!artist) return res.status(404).json({ message: 'Artistul nu a fost găsit.' });
+
+    res.json(artist);
+  } catch (err) {
+    res.status(500).json({ message: 'Eroare la actualizarea bio-ului.' });
   }
 });
 
@@ -506,7 +529,6 @@ app.post('/api/unlike-artist', verifyToken, async (req, res) => {
   }
 });
 
-// Get recommended expositions
 // Get recommended expositions based on liked artists (minimum 3)
 app.get('/api/recomandate', verifyToken, async (req, res) => {
   try {

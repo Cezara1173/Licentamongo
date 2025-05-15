@@ -7,11 +7,15 @@ const PRIMARY_PURPLE = "#9c27b0";
 const ArtistItem = ({ artist, onTriggerLoginModal, scrollId }) => {
   const [liked, setLiked] = useState(false);
   const [animating, setAnimating] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedBio, setEditedBio] = useState(artist.bio);
+  const [currentBio, setCurrentBio] = useState(artist.bio);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
   const userId = user?._id;
   const storageKey = userId ? `likedArtists_${userId}` : null;
+  const isAdmin = user?.email === 'admin@yahoo.com';
 
   useEffect(() => {
     if (!userId) return;
@@ -56,6 +60,26 @@ const ArtistItem = ({ artist, onTriggerLoginModal, scrollId }) => {
     }
   };
 
+  const handleSaveBio = async () => {
+    try {
+      const res = await fetch(`/api/artists/${artist._id}/bio`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ bio: editedBio }),
+      });
+
+      if (res.ok) {
+        setCurrentBio(editedBio);
+        setIsEditing(false);
+      }
+    } catch (err) {
+      console.error('Eroare la salvarea bio-ului:', err);
+    }
+  };
+
   return (
     <div className="artist-card" id={scrollId}>
       <div className="artist-image-container">
@@ -81,8 +105,33 @@ const ArtistItem = ({ artist, onTriggerLoginModal, scrollId }) => {
         </button>
       </div>
 
-      <h3 className="artist-name">{artist.name}</h3>
-      <p className="artist-bio">{artist.bio}</p>
+      <div className="artist-text-content">
+        <h3 className="artist-name">{artist.name}</h3>
+
+        <div className="artist-bio-section">
+          {isEditing ? (
+            <>
+              <textarea
+                className="artist-bio-edit"
+                value={editedBio}
+                onChange={(e) => setEditedBio(e.target.value)}
+              />
+              <div style={{ marginTop: '5px' }}>
+                <button className="save-btn" onClick={handleSaveBio}>Salvează</button>
+                <button className="cancel-btn" onClick={() => { setIsEditing(false); setEditedBio(currentBio); }}>Anulează</button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="artist-bio">{currentBio}</p>
+            </>
+          )}
+        </div>
+      </div>
+
+      {isAdmin && !isEditing && (
+        <span className="edit-btn aligned-bottom" onClick={() => setIsEditing(true)}>Edit</span>
+      )}
     </div>
   );
 };

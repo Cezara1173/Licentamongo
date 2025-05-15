@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-    userId: mongoose.ObjectId,
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     products: [
       {
-        productId: mongoose.ObjectId,
+        productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
         quantity: Number,
         price: Number,
       },
