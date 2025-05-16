@@ -60,7 +60,7 @@ const ProductItem = ({ product, onTriggerLoginModal, onAddToCart, onDeleteClick 
 
       <h3 className="product-title">{product.name}</h3>
       <p className="product-description">{product.description}</p>
-      <p className="product-price">${product.price.toFixed(2)}</p>
+      <p className="product-price">{product.price.toFixed(2)} RON</p>
       <p className="product-stock">Stoc: {product.stock}</p>
       <p className="product-artist">Artist: {product.artist?.name || 'Necunoscut'}</p>
 
