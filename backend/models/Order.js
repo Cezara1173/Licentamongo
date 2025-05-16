@@ -2,25 +2,24 @@ const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    products: [
-      {
-        productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-        quantity: Number,
-        price: Number,
-      },
-    ],
-    totalPrice: Number,
-    orderStatus: String,
-    createdAt: Date,
-    updatedAt: Date,
-    shippingAddress: {
-      street: String,
-      city: String,
-      state: String,
-      zip: String,
-      country: String,
+  products: [
+    {
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+      quantity: Number,
+      price: Number,
     },
-    paymentMethod: String,
-    paymentStatus: String,
-  });
-  module.exports = mongoose.model('Order', orderSchema);  
+  ],
+  totalPrice: Number,
+  orderStatus: String,
+  shippingAddress: {
+    street: String,
+    city: String,
+    state: String,
+    zip: String,
+    country: String,
+  },
+  paymentMethod: String,
+  paymentStatus: String,
+}, { timestamps: true }); // ✅ adăugat
+
+module.exports = mongoose.model('Order', orderSchema);

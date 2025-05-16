@@ -237,7 +237,7 @@ app.post('/api/orders', verifyToken, async (req, res) => {
     const order = new Order({
       userId: req.userId,
       products: req.body.products.map(product => ({
-        productId: product.productId,
+        productId: product.productId || product._id,
         quantity: product.quantity,
         price: product.price,
       })),
@@ -250,58 +250,61 @@ app.post('/api/orders', verifyToken, async (req, res) => {
       paymentStatus: req.body.paymentStatus || 'Plătit',
     });
 
-    // Verificare stoc pentru fiecare produs
     for (const item of order.products) {
       const product = await Product.findById(item.productId);
       if (!product) {
-        return res.status(404).json({ message: `Produsul cu ID ${item.productId} nu a fost găsit.` });
+        return res.status(404).json({ message: `❗ Produsul cu ID ${item.productId} nu a fost găsit.` });
       }
-
       if (product.stock < item.quantity) {
-        return res.status(400).json({ message: `Stoc insuficient pentru produsul ${product.name}.` });
+        return res.status(400).json({ message: `⚠️ Stoc insuficient pentru produsul "${product.name}".` });
       }
     }
 
-    // Salvăm comanda
     const newOrder = await order.save();
 
-    // Actualizare stoc (definitivă, NU mai resetăm ulterior)
-    for (const item of order.products) {
-      await Product.findByIdAndUpdate(
-        item.productId,
+    for (const item of newOrder.products) {
+      const productId = new mongoose.Types.ObjectId(item.productId);
+      const updatedProduct = await Product.findByIdAndUpdate(
+        productId,
         { $inc: { stock: -item.quantity } },
         { new: true }
       );
+      if (!updatedProduct) {
+        console.warn(`❗ Produsul ${item.productId} nu a fost găsit pentru scădere stoc.`);
+      } else {
+        console.log(`✅ Stoc actualizat pentru "${updatedProduct.name}" → stoc rămas: ${updatedProduct.stock}`);
+      }
     }
 
     res.status(201).json({ message: 'Comandă înregistrată cu succes.', order: newOrder });
   } catch (err) {
-    console.error("Eroare la salvarea comenzii:", err);
-    res.status(400).json({ message: err.message });
+    console.error("❌ Eroare la salvarea comenzii:", err);
+    res.status(500).json({ message: 'Eroare server la salvarea comenzii.' });
   }
 });
 
 app.get('/api/orders', verifyToken, async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find()
+      .sort({ createdAt: -1 });
     res.json(orders);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// Get all orders for current user
+
 app.get('/api/orders/me', verifyToken, async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.userId })
-      .populate('products.productId', 'name image'); // <--- aici adăugăm
+      .populate('products.productId', 'name image')
+      .sort({ createdAt: -1 }); 
 
     res.json(orders);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
-
 
 
 // Routes for Artists
