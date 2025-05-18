@@ -21,11 +21,11 @@ ul, li {
 
 /* ========== App Wrapper ========== */
 .App {
-  padding-top: 0; 
+  padding-top: 0;
   width: 100%;
   overflow-x: hidden;
-  overflow-y: unset;   
 }
+
 
 /* ========== Hero Banner ========== */
 .hero-banner-container {

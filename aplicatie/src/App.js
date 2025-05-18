@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthContext';
 import { SearchProvider } from './context/SearchContext';
@@ -37,7 +33,6 @@ const AppContent = () => {
 
   return (
     <>
-      <ScrollToTop />
       <Routes>
         <Route path="/" element={<ProductList />} />
         <Route path="/productlist" element={<ProductList />} />
@@ -71,6 +66,7 @@ const AppWrapper = () => {
       <Navbar onLoginClick={openLoginModal} onRegisterClick={openRegister} />
 
       <div className="App">
+        <ScrollToTop />
         <AppContent />
       </div>
 
