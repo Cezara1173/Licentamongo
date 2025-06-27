@@ -1,4 +1,4 @@
-/* Reset some basic styles for the whole document */
+
 body, html {
     margin: 0;
     padding: 0;
@@ -11,12 +11,12 @@ body, html {
     min-height: 100vh;
   }
   
-  /* Footer styles */
+ 
   .footer {
     background-color: #333;
     color: #fff;
     padding: 20px 0;
-    flex-shrink: 0; /* Ensure the footer does not shrink */
+    flex-shrink: 0; 
   }
   
   .footer-content {

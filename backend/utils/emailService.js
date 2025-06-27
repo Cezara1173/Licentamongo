@@ -38,7 +38,6 @@ async function sendConfirmationEmail(toEmail, username) {
   }
 }
 
-// ✅ Email pentru resetare parolă
 async function sendResetEmail(toEmail, username, link) {
   const mailOptions = {
     from: 'ArtHunt <arthunt.notificari@gmail.com>',
@@ -61,9 +60,9 @@ async function sendResetEmail(toEmail, username, link) {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('✅ Email de resetare trimis către', toEmail);
+    console.log('Email de resetare trimis către', toEmail);
   } catch (err) {
-    console.error('❌ Eroare la trimiterea emailului de resetare:', err.message);
+    console.error('Eroare la trimiterea emailului de resetare:', err.message);
   }
 }
 

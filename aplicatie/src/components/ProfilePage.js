@@ -15,7 +15,7 @@ const ProfilePage = () => {
   return (
     <div className="profile-page">
       <div className="profile-container">
-        {/* Stânga */}
+        {}
         <div className="profile-left">
           <div className="profile-avatar">{initial}</div>
           <h2>Profilul tău</h2>
@@ -23,7 +23,7 @@ const ProfilePage = () => {
           <p><strong>Email:</strong> {user.email}</p>
         </div>
 
-        {/* Dreapta */}
+        {}
         <div className="profile-right">
           <Link to="/favorites" className="profile-link-btn">❤️ Favorites</Link>
           <Link to="/orders" className="profile-link-btn">🛒 Orders</Link>

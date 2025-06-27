@@ -1,4 +1,4 @@
-/* ========== BASE RESET ========== */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -12,7 +12,6 @@ html, body {
   overflow-x: hidden;
 }
 
-/* ========== NAVBAR ========== */
 .navbar {
   position: sticky;
   top: 0;
@@ -133,7 +132,6 @@ html, body {
   gap: 15px;
 }
 
-/* 🔄 NOU: stil pentru butoanele Login & Register */
 .auth-buttons {
   display: flex;
   gap: 10px;

@@ -72,14 +72,14 @@
     }
   }
   
-  /* Responsive: 2 coloane pe tablete, 1 coloană pe mobil */
+  
   @media (max-width: 1024px) {
     .expo-scroll-artist-columns {
       grid-template-columns: repeat(2, 1fr);
     }
   
     .expo-scroll-grid {
-      grid-template-columns: 1fr; /* pe tabletă devine o singură coloană */
+      grid-template-columns: 1fr; 
     }
   }
   
@@ -123,7 +123,7 @@
     color: #555;
   }
   
-  /* NOU: Structura Despre (label + conținut în 2 coloane) */
+  
   .expo-scroll-grid {
     display: grid;
     grid-template-columns: 1fr 2fr;

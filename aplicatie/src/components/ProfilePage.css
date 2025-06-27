@@ -17,7 +17,7 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   }
   
-  /* Stânga */
+ 
   .profile-left {
     flex: 1;
     display: flex;
@@ -51,7 +51,7 @@
     color: #555;
   }
   
-  /* Dreapta */
+  
   .profile-right {
     flex: 1;
     display: flex;

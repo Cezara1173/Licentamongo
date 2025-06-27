@@ -131,7 +131,7 @@ const ExpositionList = () => {
 
   return (
     <>
-      {/* === Hero Carousel === */}
+      {}
       {featuredExpos.length > 0 && (
         <div className="hero-slider">
           {featuredExpos.map((expo, index) => (
@@ -165,7 +165,7 @@ const ExpositionList = () => {
         </div>
       )}
 
-      {/* === Filters === */}
+      {}
       <div className="expo-container">
       <div className="date-filters">
       <button className="clear-filters-btn" onClick={clearFilters}>
@@ -196,7 +196,7 @@ const ExpositionList = () => {
 </div>
 
 
-        {/* === Carousel === */}
+        {}
         <div className="expo-carousel-wrapper">
           <div className="expo-scroll-arrow left" onClick={scrollLeft}>&#10094;</div>
 
@@ -216,7 +216,7 @@ const ExpositionList = () => {
         </div>
       </div>
 
-      {/* === Flat List === */}
+      {}
       <div className="expo-list" style={{ marginTop: '20px' }}>
         {filtered.map((expo) => (
           <div className="expo-list-item" key={expo._id} onClick={() => handleClick(expo._id)}>

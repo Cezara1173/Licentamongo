@@ -5,12 +5,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require("cookie-parser");
 const { sendConfirmationEmail, sendResetEmail } = require('./utils/emailService');
-
 const app = express();
 const PORT = process.env.PORT || 5000;
-const JWT_SECRET = 'your_jwt_secret'; // Trebuie să fie o cheie secretă puternică
+const JWT_SECRET = 'your_jwt_secret'; 
 
-// Import models
+
 const User = require('./models/User');
 const Product = require('./models/Product');
 const Order = require('./models/Order');
@@ -26,19 +25,18 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Connect to MongoDB
+
 mongoose.connect('mongodb://localhost:27017/local', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-// Check connection
+
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to MongoDB'));
 
 
-// Middleware to verify token
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -54,7 +52,6 @@ const verifyToken = (req, res, next) => {
 };
 
 
-// Register
 app.post('/api/register', async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -90,7 +87,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// Login
+
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -146,15 +143,15 @@ app.post('/api/reset-password/:token', async (req, res) => {
   const { newPassword } = req.body;
 
   try {
-    // Verifică tokenul
+    
     const decoded = jwt.verify(token, 'reset_secret_key');
     const userId = decoded.userId;
 
-    // Găsește utilizatorul
+    
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'Utilizatorul nu a fost găsit.' });
 
-    // Hash noua parolă
+    
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     await user.save();
@@ -167,12 +164,11 @@ app.post('/api/reset-password/:token', async (req, res) => {
 });
 
 
-// Protected route example
 app.get('/api/protected', verifyToken, (req, res) => {
   res.json({ message: 'This is a protected route', userId: req.userId });
 });
 
-// Routes for Products
+
 
 app.get('/api/products', async (req, res) => {
   try {
@@ -209,10 +205,10 @@ app.get('/api/products/search', async (req, res) => {
   }
 });
 
-// Delete product - only for admin
+
 app.delete('/api/products/:id', verifyToken, async (req, res) => {
   try {
-    // Obținem emailul utilizatorului logat
+    
     const user = await User.findById(req.userId);
     if (!user || user.email !== 'admin@yahoo.com') {
       return res.status(403).json({ message: 'Doar administratorul poate șterge produse.' });
@@ -231,7 +227,7 @@ app.delete('/api/products/:id', verifyToken, async (req, res) => {
 });
  
 
-// Create Order and update product stock
+
 app.post('/api/orders', verifyToken, async (req, res) => {
   try {
     const order = new Order({
@@ -253,10 +249,10 @@ app.post('/api/orders', verifyToken, async (req, res) => {
     for (const item of order.products) {
       const product = await Product.findById(item.productId);
       if (!product) {
-        return res.status(404).json({ message: `❗ Produsul cu ID ${item.productId} nu a fost găsit.` });
+        return res.status(404).json({ message: ` Produsul cu ID ${item.productId} nu a fost găsit.` });
       }
       if (product.stock < item.quantity) {
-        return res.status(400).json({ message: `⚠️ Stoc insuficient pentru produsul "${product.name}".` });
+        return res.status(400).json({ message: ` Stoc insuficient pentru produsul "${product.name}".` });
       }
     }
 
@@ -270,15 +266,15 @@ app.post('/api/orders', verifyToken, async (req, res) => {
         { new: true }
       );
       if (!updatedProduct) {
-        console.warn(`❗ Produsul ${item.productId} nu a fost găsit pentru scădere stoc.`);
+        console.warn(` Produsul ${item.productId} nu a fost găsit pentru scădere stoc.`);
       } else {
-        console.log(`✅ Stoc actualizat pentru "${updatedProduct.name}" → stoc rămas: ${updatedProduct.stock}`);
+        console.log(` Stoc actualizat pentru "${updatedProduct.name}" → stoc rămas: ${updatedProduct.stock}`);
       }
     }
 
     res.status(201).json({ message: 'Comandă înregistrată cu succes.', order: newOrder });
   } catch (err) {
-    console.error("❌ Eroare la salvarea comenzii:", err);
+    console.error(" Eroare la salvarea comenzii:", err);
     res.status(500).json({ message: 'Eroare server la salvarea comenzii.' });
   }
 });
@@ -307,7 +303,7 @@ app.get('/api/orders/me', verifyToken, async (req, res) => {
 });
 
 
-// Routes for Artists
+
 app.get('/api/artists', async (req, res) => {
   try {
     const artists = await Artist.find();
@@ -329,7 +325,7 @@ app.get('/api/artists/:id', async (req, res) => {
   }
 });
 
-// Create new artist
+
 app.post('/api/artists', verifyToken, async (req, res) => {
   const artist = new Artist({
     name: req.body.name,
@@ -348,7 +344,7 @@ app.post('/api/artists', verifyToken, async (req, res) => {
   }
 });
 
-// Update artist
+
 app.put('/api/artists/:id', verifyToken, async (req, res) => {
   try {
     const artist = await Artist.findById(req.params.id);
@@ -368,7 +364,7 @@ app.put('/api/artists/:id', verifyToken, async (req, res) => {
   }
 });
 
-// Delete artist
+
 app.delete('/api/artists/:id', verifyToken, async (req, res) => {
   try {
     const artist = await Artist.findById(req.params.id);
@@ -381,7 +377,7 @@ app.delete('/api/artists/:id', verifyToken, async (req, res) => {
   }
 });
 
-// Get artworks for artist
+
 app.get('/api/artists/:id/artworks', async (req, res) => {
   try {
     const artist = await Artist.findById(req.params.id);
@@ -392,7 +388,7 @@ app.get('/api/artists/:id/artworks', async (req, res) => {
   }
 });
 
-// Get all expositions
+
 app.get('/api/expositions', async (req, res) => {
   try {
     const expositions = await Exposition.find().populate('artists', 'name');
@@ -420,7 +416,7 @@ app.put('/api/artists/:id/bio', verifyToken, async (req, res) => {
   }
 });
 
-// Get single exposition with artist details
+
 app.get('/api/expositions/:id', async (req, res) => {
   try {
     const exposition = await Exposition.findById(req.params.id).populate('artists', 'name image');
@@ -432,7 +428,7 @@ app.get('/api/expositions/:id', async (req, res) => {
   }
 });
 
-// Create exposition
+
 app.post('/api/expositions', verifyToken, async (req, res) => {
   const exposition = new Exposition({
     title: req.body.title,
@@ -452,7 +448,7 @@ app.post('/api/expositions', verifyToken, async (req, res) => {
   }
 });
 
-// Update exposition
+
 app.put('/api/expositions/:id', verifyToken, async (req, res) => {
   try {
     const exposition = await Exposition.findById(req.params.id);
@@ -473,7 +469,7 @@ app.put('/api/expositions/:id', verifyToken, async (req, res) => {
   }
 });
 
-// Delete exposition
+
 app.delete('/api/expositions/:id', verifyToken, async (req, res) => {
   try {
     const exposition = await Exposition.findById(req.params.id);
@@ -486,7 +482,7 @@ app.delete('/api/expositions/:id', verifyToken, async (req, res) => {
   }
 });
 
-// Like artist
+
 app.post('/api/like-artist', verifyToken, async (req, res) => {
   const userId = req.userId;
   const artistId = req.body.artistId;
@@ -495,7 +491,7 @@ app.post('/api/like-artist', verifyToken, async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    // Asigurăm că artistId este string pentru comparație corectă
+    
     const artistIdString = artistId.toString();
 
     if (!user.likedArtists.some(id => id.toString() === artistIdString)) {
@@ -509,7 +505,7 @@ app.post('/api/like-artist', verifyToken, async (req, res) => {
   }
 });
 
-// Unlike artist
+
 app.post('/api/unlike-artist', verifyToken, async (req, res) => {
   const userId = req.userId;
   const artistId = req.body.artistId;
@@ -532,7 +528,7 @@ app.post('/api/unlike-artist', verifyToken, async (req, res) => {
   }
 });
 
-// Get recommended expositions based on liked artists (minimum 3)
+
 app.get('/api/recomandate', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
@@ -541,7 +537,7 @@ app.get('/api/recomandate', verifyToken, async (req, res) => {
     const likedArtistIds = user.likedArtists.map(id => id.toString());
     console.log('User liked artists:', likedArtistIds);
 
-    // Populăm doar _id pentru fiecare artist
+    
     const allExpositions = await Exposition.find().populate('artists', '_id');
 
     const recomandate = allExpositions.filter(expo => {
@@ -549,7 +545,7 @@ app.get('/api/recomandate', verifyToken, async (req, res) => {
         likedArtistIds.includes(artist._id.toString())
       ).length;
 
-      return matchCount >= 3; //  minimul de artiști
+      return matchCount >= 3; 
     });
   
     console.log('Recommended expositions:', recomandate.map(e => e.title));
@@ -561,7 +557,6 @@ app.get('/api/recomandate', verifyToken, async (req, res) => {
 });
 
 
-// Create a new comment
 app.post('/api/comments', verifyToken, async (req, res) => {
   const { productId, text } = req.body;
 
@@ -583,7 +578,7 @@ app.post('/api/comments', verifyToken, async (req, res) => {
   }
 });
 
-// Get all comments for a product
+
 app.get('/api/comments/:productId', async (req, res) => {
   try {
     const comments = await Comment.find({ product: req.params.productId })
@@ -596,7 +591,7 @@ app.get('/api/comments/:productId', async (req, res) => {
   }
 });
 
-// Delete comment - only for admin
+
 app.delete('/api/comments/:id', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
@@ -617,7 +612,6 @@ app.delete('/api/comments/:id', verifyToken, async (req, res) => {
 });
 
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

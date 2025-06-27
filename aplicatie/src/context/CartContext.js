@@ -9,12 +9,11 @@ export const CartProvider = ({ children }) => {
     return JSON.parse(localStorage.getItem('cart')) || [];
   });
 
-  // 🧠 Salvează cart-ul în localStorage la fiecare modificare
+  
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // ✅ Verificare expirare token
   const isTokenExpired = (token) => {
     try {
       const decoded = JSON.parse(atob(token.split('.')[1]));
@@ -24,7 +23,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // ⛔ Golește coșul dacă tokenul este expirat sau inexistent
+
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     if (!storedToken || isTokenExpired(storedToken)) {
@@ -33,7 +32,6 @@ export const CartProvider = ({ children }) => {
     }
   }, [token]);
 
-  // ➕ Adaugă produs în coș
   const addToCart = (product) => {
     setCartItems(prev => {
       const existing = prev.find(item => item._id === product._id);
@@ -48,12 +46,12 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  // ➖ Elimină un produs din coș
+ 
   const removeFromCart = (productId) => {
     setCartItems(prev => prev.filter(item => item._id !== productId));
   };
 
-  // 🧼 Golește complet coșul (ex: după comandă reușită)
+
   const clearCart = () => {
     setCartItems([]);
     localStorage.removeItem('cart');

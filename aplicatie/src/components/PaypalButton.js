@@ -1,4 +1,4 @@
-// aplicatie/src/components/PaypalButton.js
+
 import React from 'react';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useCart } from "../context/CartContext";
